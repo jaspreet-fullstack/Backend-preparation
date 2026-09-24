@@ -1,0 +1,52 @@
+# What happens when a user enters a URL in the browser
+
+## 1. URL parsing
+Browser splits the URL into protocol, host, port, path, query and fragment.
+- HTTP → default port **80**
+- HTTPS → default port **443**
+
+## 2. Cache / HSTS check
+- Browser checks if it already has a cached copy of the resource.
+- If the site is on the HSTS list, http:// is automatically upgraded to https://.
+
+## 3. DNS resolution
+DNS (Domain Name System) converts a human-readable domain (example.com)
+into an IP address (e.g. 34.120.x.x).
+Lookup order: browser cache → OS cache/hosts file → router → ISP resolver
+→ root server → TLD server (.com) → authoritative name server.
+
+## 4. TCP connection
+Browser opens a reliable connection to the server's IP:port using the
+three-way handshake: SYN → SYN-ACK → ACK.
+(HTTP/3 uses QUIC over UDP instead.)
+
+## 5. TLS handshake (HTTPS only)
+TLS = Transport Layer Security (successor to SSL).
+- Client and server agree on TLS version and cipher suite.
+- Server sends its certificate; browser verifies it against trusted CAs.
+- Both sides create shared session keys.
+- All further traffic is encrypted.
+Provides: encryption, server authentication, data integrity.
+
+## 6. HTTP request
+Browser sends: `GET /path HTTP/1.1` with headers (Host, Cookie, Accept...).
+
+## 7. Server processing
+Request may pass through a load balancer / CDN / reverse proxy, then reaches
+the app running on the server (e.g. a GCP Compute Engine VM), which may
+query a database and builds a response.
+
+## 8. HTTP response
+Server returns a status code (200, 301, 404, 500...), headers, and body
+(usually HTML). On a redirect, the browser repeats the flow for the new URL.
+
+## 9. Browser rendering (on the client)
+- HTML → DOM
+- CSS → CSSOM
+- DOM + CSSOM → Render tree
+- Layout → Paint → Composite
+- JS is downloaded and executed and can modify the DOM.
+- Extra resources (images, CSS, JS, fonts) trigger more requests.
+
+## Summary
+URL parsing → DNS → TCP → TLS → HTTP request → server response → browser renders
