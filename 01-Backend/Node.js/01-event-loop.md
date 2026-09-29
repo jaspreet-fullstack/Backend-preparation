@@ -2,10 +2,11 @@
 
 ## 1. What is the Event Loop?
 
--- The Event Loop is the mechanism in Node.js that allows JavaScript 
-   to handle asynchronous operations without blocking the main JavaScript thread.
--- The event loop continuously checks whether there are callbacks or tasks ready 
-   to execute and pushes them onto the JavaScript call stack when the stack is free.
+-- The Event Loop is a mechanism that allows Node.js to handle asynchronous operations while JavaScript        execution primarily happens on a single main thread.
+-- When Node.js starts an asynchronous operation, such as an I/O operation, it doesn't synchronously wait for  that operation to finish. The operation is handled through the operating system or other runtime mechanisms, and once the operation completes, its callback or Promise continuation becomes eligible to run.
+-- The Event Loop then processes that work when the JavaScript thread is available.
+This allows Node.js to handle many concurrent I/O operations without creating one JavaScript thread per request.
+
 
 ## 2. Why do we need an Event Loop?
 -- We need the Event Loop because Node.js executes JavaScript primarily on a single thread.
