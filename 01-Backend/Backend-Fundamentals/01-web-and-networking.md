@@ -21,7 +21,7 @@ TLS (HTTPS)
    ↓
 HTTP Request
    ↓
-CDN / Cloudflare / WAF
+CDN / Cloudflare / WAF   (we are fetching dat from server copy files from server )
    ↓
 Load Balancer / Reverse Proxy
    ↓
