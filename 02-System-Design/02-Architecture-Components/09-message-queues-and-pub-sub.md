@@ -15,6 +15,34 @@ Publisher -> Topic -> Subscriber A
 					-> Subscriber B
 ```
 
+## RabbitMQ and Kafka
+
+- **RabbitMQ** is commonly used for task queues and flexible message routing. Workers acknowledge completed messages so failed work can be retried.
+- **Kafka** stores events in partitioned topics for a configured retention period. Consumer groups can read events independently and replay them from an earlier position.
+- Both can support asynchronous messaging. Choose based on delivery, routing, replay, throughput, and ordering needs; they are not strict substitutes for one another.
+
+## How to choose
+
+| Need | Good starting choice |
+| --- | --- |
+| Send each task to one worker; use flexible routing, acknowledgements, and retries | **RabbitMQ** |
+| Keep an event stream so several applications can read independently or replay old events | **Kafka** |
+
+Before choosing, ask: Does each message represent work to complete, or an event other services may need to read later? Do consumers need independent replay? How much traffic and ordering does the system require? Also check the team's operational experience and the broker's delivery guarantees.
+
+## Example: E-commerce orders
+
+Suppose an order should create one fulfillment job. Any available worker can process it, and failed work should be retried. I would start with **RabbitMQ**: it routes the job to a worker, tracks acknowledgement, and supports retry and dead-letter handling.
+
+If the requirement changes so inventory, analytics, and recommendations each need to read every `OrderCreated` event at their own pace, and analytics may need to replay older events, I would choose **Kafka** for that event stream.
+
+```text
+One fulfillment job -> RabbitMQ -> one available worker
+Order event stream  -> Kafka -> inventory, analytics, recommendations
+```
+
+For an interview, state the message behavior you need first, then name the broker and explain the tradeoff. Do not choose by product popularity alone.
+
 ## Tradeoffs and failure handling
 
 - Messages may arrive late, more than once, or in a different order.
