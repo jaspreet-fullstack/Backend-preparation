@@ -27,7 +27,7 @@ So, in simple terms, Node.js provides the runtime environment, while V8 is respo
 
 -- libuv is a cross-platform C library used by Node.js to provide asynchronous I/O functionality.
 -- It provides the Event Loop and integrates Node.js with operating-system-level asynchronous I/O. 
--- It also provides a thread pool for CPU heavy work/certain operations such as some filesystem, DNS, cryptographic, and compression operations.
+-- It also provides a thread pool for CPU heavy work/certain operations such as some filesystem, DNS,   cryptographic, and compression operations.
 -- This allows Node.js to handle many I/O operations without blocking the main JavaScript execution thread.
 
 
