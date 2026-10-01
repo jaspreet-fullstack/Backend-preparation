@@ -5,7 +5,7 @@ Both patterns let one service hand work to another without waiting for it to fin
 ## Difference
 
 - In a **queue**, workers share the work; each task is normally handled by one worker.
-- In **pub/sub**, one event can be sent to several interested services.
+- In **pub/sub** (publisher/subscriber), a publisher sends an event to a topic on a broker. Subscribers choose topics they care about, and the broker delivers the event to them. The publisher does not need to know which services subscribe.
 
 ```text
 Queue:  Producer -> Queue -> Worker A or Worker B

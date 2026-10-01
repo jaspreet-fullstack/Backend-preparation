@@ -65,6 +65,7 @@ This repository is a set of study notes and practice exercises for JavaScript, b
 - [Message queues and pub/sub](02-System-Design/02-Architecture-Components/09-message-queues-and-pub-sub.md)
 - [Object storage](02-System-Design/02-Architecture-Components/10-object-storage.md)
 - [Search systems](02-System-Design/02-Architecture-Components/11-search-systems.md)
+- [Consistent hashing](02-System-Design/02-Architecture-Components/12-consistent-hashing.md)
 
 #### Distributed Systems and Reliability
 
@@ -76,6 +77,8 @@ This repository is a set of study notes and practice exercises for JavaScript, b
 - [Fault tolerance and disaster recovery](02-System-Design/03-Distributed-Systems-and-Reliability/06-fault-tolerance-and-disaster-recovery.md)
 - [Observability: logs, metrics, and traces](02-System-Design/03-Distributed-Systems-and-Reliability/07-observability-logs-metrics-and-traces.md)
 - [Authentication and authorization](02-System-Design/03-Distributed-Systems-and-Reliability/08-authentication-and-authorization.md)
+- [Concurrency, parallelism, and asynchronous work](02-System-Design/03-Distributed-Systems-and-Reliability/09-concurrency-parallelism-and-asynchronous-work.md)
+- [Event-driven architecture](02-System-Design/03-Distributed-Systems-and-Reliability/10-event-driven-architecture.md)
 
 ## How to Use These Notes
 

@@ -4,6 +4,7 @@
 | --- | --- |
 | **Latency** | Time taken to complete an operation or request. |
 | **Throughput** | Work completed per unit of time, often requests per second. |
+| **Bandwidth** | Amount of data a network connection can carry per second. |
 | **Availability** | How often the system is ready to successfully serve requests. |
 | **Scalability** | Ability to handle more users or work while still meeting performance goals. |
 
@@ -21,4 +22,4 @@ When a system is slow, check whether the delay is in the client, network, servic
 
 ## Short answer
 
-Latency is how long an operation takes; throughput is how much work completes over time. Availability describes successful service, while scalability describes how the system handles growth.
+Latency is how long one operation takes. Throughput is how many operations finish per second. Bandwidth is how much data can travel per second. A system can have high bandwidth but low throughput if it processes few requests, or low latency for one request but still handle few requests overall.
