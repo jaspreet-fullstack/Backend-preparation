@@ -21,6 +21,8 @@ Publisher -> Topic -> Subscriber A
 - **Kafka** stores events in partitioned topics for a configured retention period. Consumer groups can read events independently and replay them from an earlier position.
 - Both can support asynchronous messaging. Choose based on delivery, routing, replay, throughput, and ordering needs; they are not strict substitutes for one another.
 
+For deeper interview notes, see [how to choose a broker](14-Message-Brokers/01-how-to-choose.md), the [RabbitMQ notes](14-Message-Brokers/02-RabbitMQ/01-components-and-message-flow.md), the [Kafka notes](14-Message-Brokers/03-Kafka/01-topics-partitions-and-offsets.md), and the [RabbitMQ vs. Kafka comparison](14-Message-Brokers/04-rabbitmq-vs-kafka.md).
+
 ## How to choose
 
 | Need | Good starting choice |

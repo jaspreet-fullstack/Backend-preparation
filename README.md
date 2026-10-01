@@ -66,6 +66,33 @@ This repository is a set of study notes and practice exercises for JavaScript, b
 - [Object storage](02-System-Design/02-Architecture-Components/10-object-storage.md)
 - [Search systems](02-System-Design/02-Architecture-Components/11-search-systems.md)
 - [Consistent hashing](02-System-Design/02-Architecture-Components/12-consistent-hashing.md)
+- **Redis:**
+	- [Basics and data types](02-System-Design/02-Architecture-Components/13-Redis/01-redis-basics-and-data-types.md)
+	- [Instances, replication, and Sentinel](02-System-Design/02-Architecture-Components/13-Redis/02-instances-replication-and-sentinel.md)
+	- [Redis Cluster and hash slots](02-System-Design/02-Architecture-Components/13-Redis/03-redis-cluster-and-hash-slots.md)
+	- [Persistence, TTL, and eviction](02-System-Design/02-Architecture-Components/13-Redis/04-persistence-ttl-and-eviction.md)
+	- [Redis Pub/Sub and Streams](02-System-Design/02-Architecture-Components/13-Redis/05-redis-pubsub-and-streams.md)
+	- [Redis distributed locks](02-System-Design/02-Architecture-Components/13-Redis/06-redis-distributed-locks.md)
+	- [Redis rate limiting](02-System-Design/02-Architecture-Components/13-Redis/07-redis-rate-limiting.md)
+	- [Use cases and tradeoffs](02-System-Design/02-Architecture-Components/13-Redis/08-redis-use-cases-and-tradeoffs.md)
+	- [Optional: Redis vs. Memcached](02-System-Design/02-Architecture-Components/13-Redis/09-memcached-optional-comparison.md)
+- **Message Brokers:**
+	- [How to choose a broker](02-System-Design/02-Architecture-Components/14-Message-Brokers/01-how-to-choose.md)
+	- **RabbitMQ:**
+		- [Components and message flow](02-System-Design/02-Architecture-Components/14-Message-Brokers/02-RabbitMQ/01-components-and-message-flow.md)
+		- [Exchanges and routing](02-System-Design/02-Architecture-Components/14-Message-Brokers/02-RabbitMQ/02-exchanges-and-routing.md)
+		- [Acknowledgements, retries, and dead-letter queues](02-System-Design/02-Architecture-Components/14-Message-Brokers/02-RabbitMQ/03-acks-retries-and-dead-letter-queues.md)
+		- [Durability, scaling, and failure handling](02-System-Design/02-Architecture-Components/14-Message-Brokers/02-RabbitMQ/04-durability-scaling-and-failure-handling.md)
+		- [Order-processing example](02-System-Design/02-Architecture-Components/14-Message-Brokers/02-RabbitMQ/05-interview-example-order-processing.md)
+	- **Kafka:**
+		- [Topics, partitions, and offsets](02-System-Design/02-Architecture-Components/14-Message-Brokers/03-Kafka/01-topics-partitions-and-offsets.md)
+		- [Producers, consumers, and consumer groups](02-System-Design/02-Architecture-Components/14-Message-Brokers/03-Kafka/02-producers-consumers-and-consumer-groups.md)
+		- [Replication and failure handling](02-System-Design/02-Architecture-Components/14-Message-Brokers/03-Kafka/03-replication-and-failure-handling.md)
+		- [Ordering, delivery, and idempotency](02-System-Design/02-Architecture-Components/14-Message-Brokers/03-Kafka/04-ordering-delivery-and-idempotency.md)
+		- [Retention, replay, and compaction](02-System-Design/02-Architecture-Components/14-Message-Brokers/03-Kafka/05-retention-replay-and-compaction.md)
+		- [Scaling and rebalancing](02-System-Design/02-Architecture-Components/14-Message-Brokers/03-Kafka/06-scaling-and-rebalancing.md)
+		- [Order-events example](02-System-Design/02-Architecture-Components/14-Message-Brokers/03-Kafka/07-interview-example-order-events.md)
+	- [RabbitMQ vs. Kafka](02-System-Design/02-Architecture-Components/14-Message-Brokers/04-rabbitmq-vs-kafka.md)
 
 #### Distributed Systems and Reliability
 
