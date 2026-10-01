@@ -11,4 +11,5 @@ function printEvenNumberRange(val) {
   }
   printEvenNumberRange(10)
 
+  console.log(process.memoryUsage(), 'memooooryyy');
 // output: [2, 4, 6, 8, 10]
