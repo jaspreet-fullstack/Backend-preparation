@@ -1,6 +1,6 @@
 # Consistent Hashing
 
-**Consistent hashing** assigns keys and servers positions on a circular hash space. A key belongs to the next server found moving clockwise around the circle.
+**Consistent hashing** Consistent hashing is a distributed hashing technique that maps data keys and server nodes onto a circular ring, minimizing data remapping when servers are added or removed.
 
 ```text
           [Server A]
