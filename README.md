@@ -6,24 +6,24 @@ This repository is a set of study notes and practice exercises for JavaScript, b
 
 ### JavaScript Concepts
 
-- [Variables](JS-Concept/01-what-is-variables.md)
-- [Variable types](JS-Concept/02-variables-type.md)
-- [Scope](JS-Concept/03-scope.md)
-- [Scope chain](JS-Concept/04-scope-chain.md)
-- [Temporal Dead Zone (TDZ)](JS-Concept/05-TDZ.md)
-- [Data types](JS-Concept/06-DataTypes.md)
-- [Type coercion](JS-Concept/07-type%20coercion.md)
-- [Conditions](JS-Concept/08-if-else-conditions.md/conditions.md)
-- [Loops](JS-Concept/09-loops/loops.md)
+- [Variables](JS-Concept/Variables-hoisting/01-what-is-variables.md)
+- [Variable types](JS-Concept/Variables-hoisting/02-variables-type.md)
+- [Scope](JS-Concept/Variables-hoisting/03-scope.md)
+- [Scope chain](JS-Concept/Variables-hoisting/04-scope-chain.md)
+- [Temporal Dead Zone (TDZ)](JS-Concept/Variables-hoisting/05-TDZ.md)
+- [Data types](JS-Concept/Variables-hoisting/06-DataTypes.md)
+- [Type coercion](JS-Concept/Variables-hoisting/07-type%20coercion.md)
+- [Conditions](JS-Concept/if-else-conditions/conditions.md)
+- [Loops](JS-Concept/loop-concept/loops.md)
 
 ### JavaScript Practice
 
-- [Find the largest number](JS-Concept/08-if-else-conditions.md/find-largest-number.js)
-- [FizzBuzz](JS-Concept/08-if-else-conditions.md/fizz-buzz.js)
-- [Print even numbers](JS-Concept/09-loops/print-even-number.js)
-- [Print numbers from 1 to 10](JS-Concept/09-loops/Print-number%281to10%29.js)
-- [Reverse a string](JS-Concept/09-loops/reverString.js)
-- [Sum numbers](JS-Concept/09-loops/sumof-allNumbers.js)
+- [Find the largest number](JS-Concept/if-else-conditions/find-largest-number.js)
+- [FizzBuzz](JS-Concept/if-else-conditions/fizz-buzz.js)
+- [Print even numbers](JS-Concept/loop-concept/print-even-number.js)
+- [Print numbers from 1 to 10](JS-Concept/loop-concept/Print-number%281to10%29.js)
+- [Reverse a string](JS-Concept/loop-concept/reverString.js)
+- [Sum numbers](JS-Concept/loop-concept/sumof-allNumbers.js)
 
 ### Backend Fundamentals
 
