@@ -1,25 +1,53 @@
 # RabbitMQ Durability, Scaling, and Failure Handling
 
-## Keeping messages through restart
+## 1. Durability
 
-- Declare a queue **durable** so the queue definition survives a broker restart.
-- Publish messages as **persistent** so RabbitMQ can save them with the queue.
-- For stronger broker-node fault tolerance, consider **quorum queues**, which keep replicated copies. Confirm the required durability and performance settings for the RabbitMQ version in use.
-- Durability settings add disk and replication work; they do not replace backups or correct consumer handling.
+If messages need to survive a RabbitMQ restart:
 
-## Scaling
+- **Durable Queue** → Queue survives broker restart.
+- **Persistent Message** → Message can be saved to disk.
+- **Quorum Queue** → Keeps replicated copies for better failure protection.
 
-- Add consumers to process more messages from a queue in parallel. A message is normally delivered to one consumer, not every consumer.
-- Use prefetch to avoid one slow consumer holding too many unacknowledged messages.
-- A RabbitMQ cluster lets clients connect through multiple nodes, but a queue's leader and queue type affect how that queue scales and survives failure.
-- Separate queues by work type when their processing speed, priority, or retry behavior differs.
+> **Durable queue + persistent message = Messages can survive restart**
 
-```text
-Producers -> Queue -> Worker A
-                   -> Worker B
-                   -> Worker C
+Durability adds disk and replication overhead.
+
+## 2. Scaling Consumers
+
+To process messages faster, add more consumers to the same queue.
+
+```text id="n9i2ke"
+              → Worker A
+Queue ───────→ Worker B
+              → Worker C
 ```
 
-## Interview answer
+Normally, **one message is delivered to one consumer**, so multiple consumers can process different messages in parallel.
 
-State whether messages must survive a restart, then explain durable queues, persistent messages, and replicated queue choices. For more processing capacity, add consumers and control in-flight work with prefetch.
+### Prefetch
+
+**Prefetch** controls how many unacknowledged messages a consumer can hold.
+
+> **Prefetch = Limits in-flight messages per consumer**
+
+## 3. Failure Handling
+
+If a consumer fails before acknowledging a message, RabbitMQ can **redeliver the message**.
+
+For repeated failures:
+
+```text id="w4rj4m"
+Queue
+  ↓
+Consumer
+  ↓ failure
+Retry
+  ↓ repeated failure
+DLQ
+```
+
+Use **retries + dead-letter queues** to prevent failed messages from being retried forever.
+
+## Interview Answer
+
+> **For durability, I use durable queues and persistent messages when messages must survive a broker restart. For better failure protection, quorum queues can keep replicated copies. To scale processing, I add multiple consumers to a queue and use prefetch to control in-flight messages. Failed messages can be retried and eventually moved to a dead-letter queue.**

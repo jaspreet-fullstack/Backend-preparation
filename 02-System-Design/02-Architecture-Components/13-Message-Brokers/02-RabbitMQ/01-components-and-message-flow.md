@@ -1,6 +1,6 @@
 # RabbitMQ Components and Message Flow
 
-RabbitMQ is a message broker: it accepts messages from producers, routes them to queues, and delivers them to consumers.
+RabbitMQ is a message broker: it accepts messages from producers, routes them to queues via exchanges, and delivers them to consumers.
 
 ## Main components
 

@@ -2,36 +2,77 @@
 
 ## Requirement
 
-When a customer places an order, create one fulfillment job. Workers can process different orders in parallel. Failed jobs should be retried, and repeated failures should be visible to the team.
+When a customer places an order:
+
+- Create a fulfillment job.
+- Process multiple orders in parallel.
+- Retry failed jobs.
+- Move repeatedly failed jobs to a dead-letter queue.
 
 ## Design
 
 ```text
-Client -> Order API -> Order database
-                           |
-                     publish job
-                           v
-                    RabbitMQ exchange
-                           |
-                           v
-                    Fulfillment queue
-                     /             \
-                 Worker A         Worker B
-                     |
-              success: ack
-              repeated failure: dead-letter queue
+Client
+  ↓
+Order API
+  ↓
+Order Database
+  ↓
+RabbitMQ Exchange
+  ↓
+Fulfillment Queue
+  ├── Worker A
+  ├── Worker B
+  └── Worker C
 ```
 
-The API saves the order, then publishes a job. A worker processes one job and acknowledges it only after success. Use bounded retries and route repeated failures to a dead-letter queue. Make the worker idempotent (safe to run the same job twice), because a crash after completing work but before the ack can cause redelivery.
+Each worker processes a message and sends an **ack only after successful processing**.
 
-If losing a job between saving the order and publishing it is unacceptable, discuss a **transactional outbox**: save the order and an outbox record in the same database transaction, then have a publisher send that record to RabbitMQ.
+```text
+Success → Ack
+Failure → Retry
+Repeated failure → Dead-Letter Queue
+```
 
-## Tradeoffs to mention
+Workers should be **idempotent**, because a message can be delivered more than once.
 
-- The order API can respond before fulfillment finishes; show the customer a pending status.
-- More workers increase throughput, but the database or fulfillment service may become the next bottleneck.
-- A dead-letter queue needs alerting and an operational process to inspect or replay jobs.
+### If Message Loss Is Unacceptable
 
-## Interview answer
+There is a risk if the API:
 
-I would use RabbitMQ because each order creates a task for one worker, with acknowledgement and retry behavior. I would make processing idempotent and use an outbox if the order and message must not get out of sync.
+```text
+1. Saves order
+2. Publishes to RabbitMQ
+```
+
+If the application crashes between these steps, the order is saved but the message may not be published.
+
+Use a **Transactional Outbox**:
+
+```text
+Same DB Transaction
+┌─────────────────────┐
+│ Save Order          │
+│ Save Outbox Event   │
+└──────────┬──────────┘
+           ↓
+     Outbox Worker
+           ↓
+       RabbitMQ
+           ↓
+    Fulfillment Worker
+```
+
+The outbox event is a **database record** stored in PostgreSQL or any DB. A background worker reads pending records and publishes them to RabbitMQ.
+
+## Tradeoffs
+
+- **More workers** → higher processing capacity, but the database or downstream service can become the bottleneck.
+- **Async processing** → API can respond before fulfillment finishes; order can show `PENDING`.
+- **Retries** → improve reliability but need a limit to avoid infinite retry loops.
+- **Dead-letter queue** → keeps repeatedly failed messages for inspection or replay.
+- **Idempotency** → prevents duplicate processing when a message is redelivered.
+
+## Interview Answer
+
+> **I would use RabbitMQ to process fulfillment jobs asynchronously. The order API saves the order and publishes a job to RabbitMQ, where multiple workers can process orders in parallel. Workers acknowledge messages only after successful processing, with bounded retries and a dead-letter queue for repeated failures. I would make the workers idempotent because messages can be redelivered. If losing the message between the database write and RabbitMQ publish is unacceptable, I would use a transactional outbox.**

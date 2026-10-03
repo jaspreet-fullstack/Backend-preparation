@@ -1,24 +1,64 @@
 # RabbitMQ Exchanges and Routing
 
-An exchange uses its type and message details to choose which bound queues receive a message.
+An **exchange** receives a message and decides **which queue(s) should receive it** based on its exchange type.
 
-| Exchange type | Routing rule | Example use |
-| --- | --- | --- |
-| **Direct** | Exact match between routing key and binding key | Send `invoice.created` to an invoice queue |
-| **Topic** | Match dot-separated words; `*` matches one word and `#` matches zero or more | `orders.*` matches `orders.created`; `orders.#` can also match `orders.us.created` |
-| **Fanout** | Send to every queue bound to the exchange; routing key is ignored | Broadcast a status change to several services |
-| **Headers** | Match message headers instead of a routing key | Route by a combination of message properties |
+
+
+| Exchange Types | How it routes | Easy memory |
+|---|---|---|
+| **Direct** | Exact routing key match | **Exact match** |
+| **Topic** | Pattern match using `*` and `#` | **Pattern match** |
+| **Fanout** | Sends to every bound queue | **Broadcast** |
+| **Headers** | Matches message headers | **Header-based** |
+
+### Direct
+
+Routing key must exactly match the binding key.
 
 ```text
-Publisher -> Exchange -> matching bound queues
-                |
-          routing key or headers
+routing key:  order.created
+binding key:  order.created  → Match
 ```
 
-## Interview example
+**Use:** When you need exact routing.
 
-If different workers handle `email`, `sms`, and `push`, a direct exchange can route each message to its matching queue. If several services must all receive `OrderCreated`, bind each service queue to a fanout exchange.
+### Topic
 
-## Interview answer
+Uses patterns:
 
-Use direct routing for exact matches, topic routing for patterns, fanout to broadcast, and headers when routing depends on message properties. Choose the simplest rule that meets the requirement.
+- `*` → exactly one word
+- `#` → zero or more words
+
+Example:
+
+```text
+orders.*  → orders.created
+orders.#  → orders.created
+orders.#  → orders.india.created
+```
+
+**Use:** When you need pattern-based routing.
+
+### Fanout
+
+Sends the message to **every queue bound to the exchange**.
+
+```text
+              → Queue A
+Exchange  ───→ Queue B
+              → Queue C
+```
+
+Routing key is **ignored**.
+
+**Use:** Broadcasting an event to multiple services.
+
+### Headers
+
+Routes messages based on **message headers** instead of the routing key.
+
+**Use:** When routing depends on multiple message properties.
+
+## Interview Answer
+
+> **RabbitMQ has four common exchange types. Direct uses an exact routing-key match, Topic supports pattern matching, Fanout broadcasts to all bound queues, and Headers routes based on message headers.**
