@@ -1,29 +1,56 @@
 # Kafka Interview Example: Order Events
 
-## Requirement
+## 1. Requirement
 
-After an order is placed, inventory, analytics, and recommendations each need to process the event independently. Analytics must be able to replay events after a processing bug.
+When an order is placed:
 
-## Design
+- Inventory, Analytics, and Recommendations must process the event independently.
+- Analytics should be able to replay old events if needed.
+
+## 2. Design
 
 ```text
-Order API -> Order database + outbox -> Kafka topic: orders
-                                         | key = orderId
-                       +-----------------+------------------+
-                       v                 v                  v
-                 Inventory group  Analytics group  Recommendations group
+Order API
+    |
+    v
+PostgreSQL
+(Order + Outbox Event)
+    |
+    v
+Outbox Publisher
+    |
+    v
+Kafka Topic: orders
+(key = orderId)
+    |
+    |----> Inventory Group
+    |
+    |----> Analytics Group
+    |
+    |----> Recommendations Group
 ```
 
-The order service writes the order and an outbox record in one database transaction. A publisher sends the outbox event to Kafka. Each service uses its own consumer group and offset, so one service's progress does not move another's. Using `orderId` as the key keeps events for one order in the same partition.
+### How It Works
 
-Consumers commit offsets after processing and use event IDs or idempotent updates to handle a repeated event safely. Analytics can reset its offset and replay retained events; protect downstream systems from the replay load.
+1. Save the **order and outbox event** in the same database transaction.
+2. The outbox publisher sends the event to Kafka.
+3. Each service uses its **own consumer group** to process the event independently.
+4. Consumers commit offsets after successful processing.
 
-## Tradeoffs to discuss
+Using `orderId` as the message key keeps events for the same order in the same partition, preserving their order.
 
-- Consumers may update their systems later than the order was placed; the order API should not promise immediate completion of every downstream action.
-- Choose partition count and key based on expected traffic; one very popular key can create a hot partition.
-- State how long events are retained and what happens when a consumer falls behind that period.
+## 3. Failure Handling
 
-## Interview answer
+- **Idempotency:** Consumers safely handle duplicate events.
+- **Replay:** Analytics can reset its offset and read retained events again.
+- **Retention:** Kafka keeps events according to its configured retention period.
 
-I would choose Kafka because several independent services need the same order events and analytics needs replay. I would partition by order ID for per-order ordering and make consumers safe to retry.
+## 4. Tradeoffs
+
+- **Asynchronous processing:** Other services may update their data after the order is created.
+- **Partitions:** More partitions allow more parallel processing but add overhead.
+- **Retention:** Old events cannot be replayed once they are deleted.
+
+## Interview Answer
+
+**I would use Kafka because multiple services need to process the same order events independently, and analytics requires replay. I would use a transactional outbox to reliably publish events, separate consumer groups for each service, and `orderId` as the message key to maintain per-order ordering. Consumers would also be idempotent to handle duplicate events.**

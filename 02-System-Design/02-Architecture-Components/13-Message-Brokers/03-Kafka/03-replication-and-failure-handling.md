@@ -1,26 +1,85 @@
 # Kafka Replication and Failure Handling
 
-Kafka can keep copies of each partition on different brokers so a broker failure does not automatically lose the partition.
+Kafka keeps **multiple copies of partitions** on different brokers so data can survive a broker failure.
 
-- The **leader replica** handles reads and writes for a partition.
-- **Follower replicas** copy records from the leader.
-- **In-sync replicas (ISR)** are replicas that are caught up enough to be considered current.
-- If the leader fails, Kafka can elect an in-sync replica as the new leader.
+## 1. Leader and Followers
 
-```text
-Producer -> Leader replica -> Follower replica
-                         `-> Follower replica
-                leader fails: elect an in-sync follower
+Each partition has:
+
+- **Leader** → Handles reads and writes.
+- **Followers** → Copy data from the leader.
+- **ISR (In-Sync Replicas)** → Replicas that are sufficiently caught up with the leader.
+
+```text id="8q4k9v"
+             Partition
+                |
+             Leader
+            /      \
+       Follower   Follower
 ```
 
-## Producer acknowledgements
+If the leader fails, Kafka can choose an **in-sync follower** as the new leader.
 
-- `acks=0`: producer does not wait for broker confirmation; faster, but a record can be lost without the producer knowing.
-- `acks=1`: leader confirms the record; a leader failure before replication can still lose it.
-- `acks=all`: wait for the current in-sync replicas to confirm, subject to broker settings such as `min.insync.replicas`. This improves durability but can reject writes if too few replicas are available.
+> **Leader = Handles requests**  
+> **Follower = Copies data**  
+> **ISR = Up-to-date replicas**
 
-Replication and acknowledgement settings trade write availability and speed against the chance of losing a confirmed record. They do not remove the need to understand the cluster's configuration.
+## 2. Producer `acks`
 
-## Interview answer
+`acks` controls how much confirmation the producer waits for.
 
-Explain which replicas can become leader and what producer acknowledgement level is required. Connect the choice to acceptable data loss and behavior when replicas are unavailable.
+| `acks` | Meaning | Durability |
+|---|---|---|
+| `0` | No broker confirmation | Lowest |
+| `1` | Leader confirms | Medium |
+| `all` | Required in-sync replicas confirm | Highest |
+
+### `acks=0`
+
+Producer does not wait for Kafka's confirmation.
+
+> **Fast, but messages can be lost without the producer knowing.**
+
+### `acks=1`
+
+The leader confirms the message to the producer.
+
+> **Better, but the message can be lost if the leader fails before replication.**
+
+### `acks=all`
+
+Producer waits for the required in-sync replicas to confirm.
+
+> **Best durability, but writes can fail if not enough replicas are available.**
+
+### If Acknowledgement Is Not Received
+
+If the producer **does not receive the required acknowledgement**, Kafka considers the send **unsuccessful**.
+
+The producer can **retry** the message if retries are configured. If retries are exhausted, the producer reports an error to the application.
+
+```text id="w5x8nd"
+Producer
+   ↓
+Kafka
+   ↓
+Required ACK ❌
+   ↓
+Retry
+   ↓
+Still fails
+   ↓
+Producer reports error
+```
+
+> **No required ACK → Send fails → Retry if configured → Error if retries are exhausted**
+
+## Easy Memory
+
+> `acks=0` → **Don't wait**  
+> `acks=1` → **Leader confirms**  
+> `acks=all` → **Replicas confirm**
+
+## Interview Answer
+
+> **Kafka replicates each partition across multiple brokers. The leader handles reads and writes, while followers copy the data. In-sync replicas are sufficiently caught-up replicas that can become the new leader if the current leader fails. The producer's `acks` setting controls how much confirmation it waits for: `0` is fastest, `1` waits for the leader, and `all` waits for the required in-sync replicas. If the required acknowledgement is not received, the send is considered unsuccessful and the producer can retry based on its configuration.**

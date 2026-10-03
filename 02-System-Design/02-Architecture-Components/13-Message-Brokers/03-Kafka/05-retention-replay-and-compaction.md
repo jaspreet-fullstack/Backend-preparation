@@ -1,20 +1,56 @@
 # Kafka Retention, Replay, and Compaction
 
-Kafka normally keeps records for a configured time or size limit, even after a consumer has read them. Each consumer group tracks its own offsets, so it can read at its own pace.
+## 1. Retention
 
-## Replay
+Kafka keeps messages for a configured **time or size limit**, even after consumers have read them.
 
-A consumer can move its offset back and read retained records again. This is useful for rebuilding a search index or fixing a consumer after a bug. Replay can put load on Kafka and downstream services, so plan capacity and avoid repeating side effects.
+> **Retention = How long Kafka keeps messages**
 
-## Log compaction
+Each consumer group has its own **offset**, so different groups can read the same messages at different speeds.
 
-With **log compaction**, Kafka keeps the latest record for each key (and deletion markers called tombstones for a configured period). It is useful for keeping the latest state per entity, but it is not a full history of every update.
+## 2. Replay
 
-```text
-Key user-7: name=A -> name=B -> name=C
-Compacted view:             name=C
+A consumer can move its offset back and **read old messages again**, as long as they are still retained.
+
+Example:
+
+```text id="7n6k2p"
+Message 1 → Message 2 → Message 3 → Message 4
+                    ↑
+              Consumer reads again
 ```
 
-## Interview answer
+**Use:** Rebuilding data, fixing a consumer, or reprocessing events.
 
-Use retention when consumers need a replayable event history for a limited period. Use compaction when consumers need the latest value per key. State the retention window and how replay avoids repeating external actions.
+> **Replay = Read old messages again**
+
+Be careful: replaying can repeat external actions, so consumers should be **idempotent**.
+
+## 3. Log Compaction
+
+Log compaction keeps the **latest value for each key**.
+
+Example:
+
+```text id="z2p7kt"
+user-7 → name=A
+user-7 → name=B
+user-7 → name=C
+
+After compaction:
+user-7 → name=C
+```
+
+> **Compaction = Keep latest value per key**
+
+It is useful when you mainly need the **latest state**, not the complete history.
+
+## Easy Memory
+
+> **Retention → Keep messages for some time**  
+> **Replay → Read old messages again**  
+> **Compaction → Keep latest value per key**
+
+## Interview Answer
+
+> **Kafka retention controls how long messages are kept, even after they are consumed. Replay allows a consumer to read retained messages again by moving its offset back. Log compaction keeps the latest value for each key and is useful when we need the latest state of an entity rather than its complete history.**

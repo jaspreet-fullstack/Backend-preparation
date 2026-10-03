@@ -1,20 +1,83 @@
 # Kafka Scaling and Rebalancing
 
-Kafka scales work across **partitions** and brokers. Partitions are the units that can be stored and consumed in parallel.
+Kafka scales by using **partitions** to process messages in parallel.
 
-## Scaling consumers
+## 1. Scaling Consumers
 
-- In one consumer group, a partition is assigned to at most one consumer at a time.
-- Adding consumers can increase parallel work only while there are unassigned partitions. Extra consumers remain idle.
-- If membership changes, Kafka reassigns partitions; this is a **rebalance** and can briefly pause processing.
-- A slow group falls behind. The difference between the newest offset and the group's offset is called **consumer lag**.
+In a consumer group:
 
-## Scaling partitions
+> **One partition → One consumer at a time**
 
-- More partitions can increase parallelism, but use more broker resources and add operational work.
-- Too few partitions limit consumer parallelism; too many can add overhead.
-- A hot key can send too much work to one partition. Increasing a topic's partition count may also change where future records for a key go, so consider ordering requirements before changing it.
+Example:
 
-## Interview answer
+```text id="v3p8x1"
+3 Partitions
 
-Estimate the needed parallelism, choose enough partitions for expected consumer work, and leave capacity for growth. Explain rebalances, lag, and how keys distribute traffic.
+P0 → Consumer A
+P1 → Consumer B
+P2 → Consumer C
+```
+
+If there are more consumers than partitions:
+
+```text id="c9q1zr"
+2 Partitions
+
+P0 → Consumer A
+P1 → Consumer B
+       Consumer C → Idle
+```
+
+So adding consumers only helps when there are **available partitions**.
+
+## 2. Rebalancing
+
+When a consumer joins, leaves, or fails, Kafka **reassigns partitions** between consumers.
+
+This is called a **rebalance**.
+
+> **Rebalance = Redistribute partitions among consumers**
+
+A rebalance can temporarily pause processing.
+
+## 3. Consumer Lag
+
+**Consumer lag** means how far behind a consumer group is from the latest messages.
+
+```text id="s7v2ka"
+Latest offset:   1000
+Consumer offset:  900
+
+Lag = 100
+```
+
+> **Lag = Messages the consumer group is behind**
+
+High lag usually means consumers cannot keep up with the incoming workload.
+
+## 4. Scaling Partitions
+
+More partitions allow more consumers to work in parallel.
+
+```text id="k8m3qx"
+More partitions
+      ↓
+More consumers can work
+      ↓
+Higher parallelism
+```
+
+But too many partitions increase **broker resource usage and operational overhead**.
+
+Also, a **hot key** can send most traffic to one partition, limiting parallelism.
+
+## Easy Memory
+
+> **Partitions → Parallelism**  
+> **Consumers → Process partitions**  
+> **Rebalance → Redistribute partitions**  
+> **Lag → Consumer is behind**
+
+## Interview Answer
+
+> **Kafka scales consumer processing through partitions. In a consumer group, one consumer handles a partition at a time, so we need enough partitions for the desired parallelism. When consumers join or leave, Kafka rebalances the partitions. I would also monitor consumer lag to see whether consumers are keeping up with the incoming workload.**

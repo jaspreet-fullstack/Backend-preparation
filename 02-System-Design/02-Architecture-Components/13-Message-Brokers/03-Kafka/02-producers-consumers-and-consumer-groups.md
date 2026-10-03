@@ -1,22 +1,64 @@
 # Kafka Producers, Consumers, and Consumer Groups
 
-- A **producer** writes records to a topic. A record key helps Kafka choose its partition.
-- A **consumer** reads records and tracks its position using offsets.
-- A **consumer group** is a set of consumers sharing the work for a topic. Within one group, a partition is assigned to at most one consumer at a time.
-- Different groups each read the topic independently, so separate services can process the same events.
+## 1. Producer
+
+A **producer** sends messages to a Kafka topic.
 
 ```text
-                         +-> Group A: inventory consumers
-Producer -> Kafka topic -|
-                         `-> Group B: analytics consumers
+Producer → Topic
 ```
 
-If a group has fewer consumers than partitions, some consumers handle several partitions. If it has more consumers than partitions, some consumers sit idle. When group membership changes, Kafka reassigns partitions (a **rebalance**), which can briefly pause work.
+The message **key** can determine which partition receives the message.
 
-## Interview example
+> **Producer = Writes messages**
 
-The inventory service and analytics service each use their own group to read `orders`. Inventory can process current orders while analytics replays or processes the stream separately.
+## 2. Consumer
 
-## Interview answer
+A **consumer** reads messages from Kafka and tracks its position using **offsets**.
 
-Use a consumer group to share partitions among workers. Use separate groups when different services each need their own copy of the topic's events and their own reading position.
+> **Consumer = Reads messages**
+
+## 3. Consumer Group
+
+A **consumer group** is a group of consumers that **share the work** of reading a topic.
+
+```text
+Topic: orders
+
+Partition 0 → Consumer A
+Partition 1 → Consumer B
+Partition 2 → Consumer C
+```
+
+Within one consumer group, a partition is normally assigned to **only one consumer at a time**.
+
+### Important
+
+- **Consumers < Partitions** → Some consumers handle multiple partitions.
+- **Consumers > Partitions** → Some consumers are idle.
+- When consumers join or leave, Kafka may **rebalance** the partitions.
+
+## 4. Multiple Consumer Groups
+
+Different consumer groups can read the **same topic independently**.
+
+```text
+                    ┌→ Group A → Inventory
+Producer → Topic ───┤
+                    └→ Group B → Analytics
+```
+
+Each group maintains its **own offsets**.
+
+So both Inventory and Analytics can process the same events independently.
+
+## Easy Memory
+
+> **Producer = Writes**  
+> **Consumer = Reads**  
+> **Consumer Group = Shares the work**  
+> **Different Groups = Independent readers**
+
+## Interview Answer
+
+> **A Kafka producer writes messages to a topic, while consumers read them and track their position using offsets. A consumer group allows multiple consumers to share the partitions of a topic. If different services need to process the same events independently, they use separate consumer groups.**

@@ -1,16 +1,66 @@
 # Kafka Ordering, Delivery, and Idempotency
 
-## Ordering
+## 1. Ordering
 
-Kafka preserves order **within one partition**. Use the same record key, such as `orderId`, to put related events in the same partition. Kafka does not promise a single order across all partitions.
+Kafka guarantees ordering **within a partition**.
 
-## Delivery behavior
+If related messages need to stay in order, use the same **key**, such as `orderId`, so they go to the same partition.
 
-- **At-most-once**: commit the offset before processing. A crash can skip work, but a record is not intentionally processed again.
-- **At-least-once**: process first and commit the offset after success. A crash before the commit can cause the record to be processed again.
-- Make consumers **idempotent** (safe to run twice), for example by recording processed event IDs or using an idempotent database update.
-- An idempotent producer helps avoid duplicate writes to Kafka when a producer retries. Kafka transactions can provide exactly-once processing within Kafka workflows; writes to an external database still need their own deduplication or transaction design.
+```text id="j8x9m3"
+order-101 → Partition 0
+order-101 → Partition 0
+order-101 → Partition 0
+```
 
-## Interview answer
+> **Same key → Same partition → Order preserved**
 
-Choose at-most-once only if losing some work is acceptable. At-least-once is common when work must not be skipped, but consumers must handle duplicates. State where ordering is required and how it is preserved.
+Kafka does **not** guarantee ordering across different partitions.
+
+## 2. Delivery Guarantees
+
+### At-Most-Once
+
+Commit the offset **before processing**.
+
+If the consumer crashes after committing but before processing:
+
+> **Message can be lost, but it won't be processed again.**
+
+### At-Least-Once
+
+Process the message **first**, then commit the offset.
+
+If the consumer crashes after processing but before committing:
+
+> **Message can be processed again.**
+
+This is commonly used when losing work is worse than duplicate processing.
+
+## 3. Idempotency
+
+Because at-least-once delivery can cause duplicates, consumers should be **idempotent**.
+
+> **Idempotent = Processing the same message multiple times produces the same final result.**
+
+Example:
+
+```text id="1ok1a8"
+Event ID: 123
+
+First time  → Update order
+Second time → Detect ID 123 → Skip
+```
+
+Common approaches:
+- Store processed event IDs.
+- Use database operations that are safe to repeat.
+
+## Easy Memory
+
+> **At-most-once → May lose, no duplicate**  
+> **At-least-once → No intentional loss, may duplicate**  
+> **Idempotency → Makes duplicates safe**
+
+## Interview Answer
+
+> **Kafka guarantees ordering within a partition, so I use the same key for events that must stay ordered. For delivery, at-most-once can lose messages, while at-least-once can deliver duplicates. I generally use at-least-once when work should not be lost and make the consumer idempotent so duplicate messages are safe to process.**
