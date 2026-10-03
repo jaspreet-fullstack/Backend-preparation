@@ -41,70 +41,91 @@ This repository is a set of study notes and practice exercises for JavaScript, b
 - [Memory and processes](01-Backend/Node.js/04-memory-processes.md)
 - [Streams and buffers](01-Backend/Node.js/05-Streams-&-buffer.md)
 
+### Database Engines
+
+#### Shared Fundamentals
+
+- [Database fundamentals: DBMS, constraints, normalization, and ACID](02-Database-Engines/00-Shared-Database-Fundamentals.md)
+
+#### PostgreSQL
+
+- [Basics and architecture](02-Database-Engines/01-PostgreSQL/01-basics-and-architecture.md)
+- [Schema, data types, and queries](02-Database-Engines/01-PostgreSQL/02-schema-data-types-and-queries.md)
+- [Indexes and query plans](02-Database-Engines/01-PostgreSQL/03-indexes-and-query-plans.md)
+- [Transactions, isolation, and locking](02-Database-Engines/01-PostgreSQL/04-transactions-isolation-and-locking.md)
+- [Replication, backups, and scaling](02-Database-Engines/01-PostgreSQL/05-replication-backups-and-scaling.md)
+- [Common interview questions](02-Database-Engines/01-PostgreSQL/06-common-interview-questions.md)
+
+#### MongoDB
+
+- [Basics and document model](02-Database-Engines/02-MongoDB/01-basics-and-document-model.md)
+- [Data modeling: embedding vs. references](02-Database-Engines/02-MongoDB/02-data-modeling-embedding-vs-references.md)
+- [Queries and aggregation](02-Database-Engines/02-MongoDB/03-queries-and-aggregation.md)
+- [Indexes and transactions](02-Database-Engines/02-MongoDB/04-indexes-and-transactions.md)
+- [Replica sets, sharding, and backups](02-Database-Engines/02-MongoDB/05-replica-sets-sharding-and-backups.md)
+- [Common interview questions](02-Database-Engines/02-MongoDB/06-common-interview-questions.md)
+
 ### System Design Interview Preparation
 
-#### Interview Basics
+#### Fundamentals
 
-- [Interview approach](02-System-Design/01-Interview-Basics/01-system-design-interview-approach.md)
-- [Requirements and constraints](02-System-Design/01-Interview-Basics/02-requirements-and-constraints.md)
-- [Back-of-the-envelope estimation](02-System-Design/01-Interview-Basics/03-back-of-the-envelope-estimation.md)
-- [Latency, throughput, availability, and scalability](02-System-Design/01-Interview-Basics/04-latency-throughput-availability-and-scalability.md)
-- [API design](02-System-Design/01-Interview-Basics/05-api-design.md)
-- [Data modeling](02-System-Design/01-Interview-Basics/06-data-modeling.md)
+- [Interview approach](03-System-Design/01-Fundamentals/01-system-design-interview-approach.md)
+- [Requirements and constraints](03-System-Design/01-Fundamentals/02-requirements-and-constraints.md)
+- [Back-of-the-envelope estimation](03-System-Design/01-Fundamentals/03-back-of-the-envelope-estimation.md)
+- [Core system design fundamentals](03-System-Design/01-Fundamentals/04-basic-fundamentals.md)
+- [API design](03-System-Design/01-Fundamentals/05-api-design.md)
+- [Data modeling](03-System-Design/01-Fundamentals/06-data-modeling.md)
 
 #### Architecture Components
 
-- [Load balancers and reverse proxies](02-System-Design/02-Architecture-Components/01-load-balancers-and-reverse-proxies.md)
-- [Content delivery networks (CDNs)](02-System-Design/02-Architecture-Components/02-cdns.md)
-- [Caching and cache invalidation](02-System-Design/02-Architecture-Components/03-caching-and-cache-invalidation.md)
-- [SQL vs. NoSQL databases](02-System-Design/02-Architecture-Components/04-sql-vs-nosql-databases.md)
-- [Database indexes](02-System-Design/02-Architecture-Components/05-database-indexes.md)
-- [Database replication](02-System-Design/02-Architecture-Components/06-database-replication.md)
-- [Database sharding](02-System-Design/02-Architecture-Components/07-database-sharding.md)
-- [Message queues and pub/sub](02-System-Design/02-Architecture-Components/08-message-queues-and-pub-sub.md)
-- [Object storage](02-System-Design/02-Architecture-Components/09-object-storage.md)
-- [Search systems](02-System-Design/02-Architecture-Components/10-search-systems.md)
-- [Consistent hashing](02-System-Design/02-Architecture-Components/11-consistent-hashing.md)
+- [Load balancers and reverse proxies](03-System-Design/02-Architecture-Components/01-load-balancers-and-reverse-proxies.md)
+- [Content delivery networks (CDNs)](03-System-Design/02-Architecture-Components/02-cdns.md)
+- [Caching and cache invalidation](03-System-Design/02-Architecture-Components/03-caching.md)
+- [SQL vs. NoSQL databases](03-System-Design/02-Architecture-Components/04-sql-vs-nosql-databases.md)
+- [Database indexes](03-System-Design/02-Architecture-Components/05-database-indexes.md)
+- [Database replication](03-System-Design/02-Architecture-Components/06-database-replication.md)
+- [Database sharding](03-System-Design/02-Architecture-Components/07-database-sharding.md)
+- [Message queues and pub/sub](03-System-Design/02-Architecture-Components/08-message-queues-and-pub-sub.md)
+- [Object storage](03-System-Design/02-Architecture-Components/09-object-storage.md)
+- [Search systems](03-System-Design/02-Architecture-Components/10-search-systems.md)
+- [Consistent hashing](03-System-Design/02-Architecture-Components/11-consistent-hashing.md)
 - **Redis:**
-	- [Basics and data types](02-System-Design/02-Architecture-Components/12-Redis/01-redis-basics-and-data-types.md)
-	- [Instances, replication, and Sentinel](02-System-Design/02-Architecture-Components/12-Redis/02-instances-replication-and-sentinel.md)
-	- [Redis Cluster and hash slots](02-System-Design/02-Architecture-Components/12-Redis/03-redis-cluster-and-hash-slots.md)
-	- [Persistence, TTL, and eviction](02-System-Design/02-Architecture-Components/12-Redis/04-persistence-ttl-and-eviction.md)
-	- [Redis Pub/Sub and Streams](02-System-Design/02-Architecture-Components/12-Redis/05-redis-pubsub-and-streams.md)
-	- [Redis distributed locks](02-System-Design/02-Architecture-Components/12-Redis/06-redis-distributed-locks.md)
-	- [Redis rate limiting](02-System-Design/02-Architecture-Components/12-Redis/07-redis-rate-limiting.md)
-	- [Use cases and tradeoffs](02-System-Design/02-Architecture-Components/12-Redis/08-redis-use-cases-and-tradeoffs.md)
-	- [Optional: Redis vs. Memcached](02-System-Design/02-Architecture-Components/12-Redis/09-memcached-optional-comparison.md)
+	- [Basics and data types](03-System-Design/02-Architecture-Components/12-Redis/01-redis-basics.md)
+	- [Instances, replication, and Sentinel](03-System-Design/02-Architecture-Components/12-Redis/02-instances-replication-and-sentinel.md)
+	- [Redis Cluster and hash slots](03-System-Design/02-Architecture-Components/12-Redis/03-redis-cluster-and-hash-slots.md)
+	- [Persistence, TTL, and eviction](03-System-Design/02-Architecture-Components/12-Redis/04-persistence-ttl-and-eviction.md)
+	- [Redis Pub/Sub and Streams](03-System-Design/02-Architecture-Components/12-Redis/05-redis-pubsub-and-streams.md)
+	- [Redis distributed locks](03-System-Design/02-Architecture-Components/12-Redis/06-redis-distributed-locks.md)
+	- [Redis rate limiting](03-System-Design/02-Architecture-Components/12-Redis/07-redis-rate-limiting.md)
+	- [Optional: Redis vs. Memcached](03-System-Design/02-Architecture-Components/12-Redis/08-memcached-optional-comparison.md)
 - **Message Brokers:**
-	- [How to choose a broker](02-System-Design/02-Architecture-Components/13-Message-Brokers/01-how-to-choose.md)
+	- [RabbitMQ vs. Kafka](03-System-Design/02-Architecture-Components/13-Message-Brokers/01-rabbitmq-vs-kafka.md)
 	- **RabbitMQ:**
-		- [Components and message flow](02-System-Design/02-Architecture-Components/13-Message-Brokers/02-RabbitMQ/01-components-and-message-flow.md)
-		- [Exchanges and routing](02-System-Design/02-Architecture-Components/13-Message-Brokers/02-RabbitMQ/02-exchanges-and-routing.md)
-		- [Acknowledgements, retries, and dead-letter queues](02-System-Design/02-Architecture-Components/13-Message-Brokers/02-RabbitMQ/03-acks-retries-and-dead-letter-queues.md)
-		- [Durability, scaling, and failure handling](02-System-Design/02-Architecture-Components/13-Message-Brokers/02-RabbitMQ/04-durability-scaling-and-failure-handling.md)
-		- [Order-processing example](02-System-Design/02-Architecture-Components/13-Message-Brokers/02-RabbitMQ/05-interview-example-order-processing.md)
+		- [Components and message flow](03-System-Design/02-Architecture-Components/13-Message-Brokers/02-RabbitMQ/01-components-and-message-flow.md)
+		- [Exchanges and routing](03-System-Design/02-Architecture-Components/13-Message-Brokers/02-RabbitMQ/02-exchanges-and-routing.md)
+		- [Acknowledgements, retries, and dead-letter queues](03-System-Design/02-Architecture-Components/13-Message-Brokers/02-RabbitMQ/03-acks-retries-and-dead-letter-queues.md)
+		- [Durability, scaling, and failure handling](03-System-Design/02-Architecture-Components/13-Message-Brokers/02-RabbitMQ/04-durability-scaling-and-failure-handling.md)
+		- [Order-processing example](03-System-Design/02-Architecture-Components/13-Message-Brokers/02-RabbitMQ/05-interview-example-order-processing.md)
 	- **Kafka:**
-		- [Topics, partitions, and offsets](02-System-Design/02-Architecture-Components/13-Message-Brokers/03-Kafka/01-topics-partitions-and-offsets.md)
-		- [Producers, consumers, and consumer groups](02-System-Design/02-Architecture-Components/13-Message-Brokers/03-Kafka/02-producers-consumers-and-consumer-groups.md)
-		- [Replication and failure handling](02-System-Design/02-Architecture-Components/13-Message-Brokers/03-Kafka/03-replication-and-failure-handling.md)
-		- [Ordering, delivery, and idempotency](02-System-Design/02-Architecture-Components/13-Message-Brokers/03-Kafka/04-ordering-delivery-and-idempotency.md)
-		- [Retention, replay, and compaction](02-System-Design/02-Architecture-Components/13-Message-Brokers/03-Kafka/05-retention-replay-and-compaction.md)
-		- [Scaling and rebalancing](02-System-Design/02-Architecture-Components/13-Message-Brokers/03-Kafka/06-scaling-and-rebalancing.md)
-		- [Order-events example](02-System-Design/02-Architecture-Components/13-Message-Brokers/03-Kafka/07-interview-example-order-events.md)
-	- [RabbitMQ vs. Kafka](02-System-Design/02-Architecture-Components/13-Message-Brokers/04-rabbitmq-vs-kafka.md)
+		- [Topics, partitions, and offsets](03-System-Design/02-Architecture-Components/13-Message-Brokers/03-Kafka/01-topics-partitions-and-offsets.md)
+		- [Producers, consumers, and consumer groups](03-System-Design/02-Architecture-Components/13-Message-Brokers/03-Kafka/02-producers-consumers-and-consumer-groups.md)
+		- [Replication and failure handling](03-System-Design/02-Architecture-Components/13-Message-Brokers/03-Kafka/03-replication-and-failure-handling.md)
+		- [Ordering, delivery, and idempotency](03-System-Design/02-Architecture-Components/13-Message-Brokers/03-Kafka/04-ordering-delivery-and-idempotency.md)
+		- [Retention, replay, and compaction](03-System-Design/02-Architecture-Components/13-Message-Brokers/03-Kafka/05-retention-replay-and-compaction.md)
+		- [Scaling and rebalancing](03-System-Design/02-Architecture-Components/13-Message-Brokers/03-Kafka/06-scaling-and-rebalancing.md)
+		- [Order-events example](03-System-Design/02-Architecture-Components/13-Message-Brokers/03-Kafka/07-interview-example-order-events.md)
 
 #### Distributed Systems and Reliability
 
-- [Consistency and CAP](02-System-Design/03-Distributed-Systems-and-Reliability/01-consistency-and-cap.md)
-- [Synchronous vs. asynchronous communication](02-System-Design/03-Distributed-Systems-and-Reliability/02-synchronous-vs-asynchronous-communication.md)
-- [Timeouts, retries, and idempotency](02-System-Design/03-Distributed-Systems-and-Reliability/03-timeouts-retries-and-idempotency.md)
-- [Rate limiting and throttling](02-System-Design/03-Distributed-Systems-and-Reliability/04-rate-limiting-and-throttling.md)
-- [Circuit breakers and backpressure](02-System-Design/03-Distributed-Systems-and-Reliability/05-circuit-breakers-and-backpressure.md)
-- [Fault tolerance and disaster recovery](02-System-Design/03-Distributed-Systems-and-Reliability/06-fault-tolerance-and-disaster-recovery.md)
-- [Observability: logs, metrics, and traces](02-System-Design/03-Distributed-Systems-and-Reliability/07-observability-logs-metrics-and-traces.md)
-- [Authentication and authorization](02-System-Design/03-Distributed-Systems-and-Reliability/08-authentication-and-authorization.md)
-- [Concurrency, parallelism, and asynchronous work](02-System-Design/03-Distributed-Systems-and-Reliability/09-concurrency-parallelism-and-asynchronous-work.md)
-- [Event-driven architecture](02-System-Design/03-Distributed-Systems-and-Reliability/10-event-driven-architecture.md)
+- [Consistency and CAP](03-System-Design/03-Distributed-Systems-and-Reliability/01-consistency-and-cap.md)
+- [Synchronous vs. asynchronous communication](03-System-Design/03-Distributed-Systems-and-Reliability/02-synchronous-vs-asynchronous-communication.md)
+- [Timeouts, retries, and idempotency](03-System-Design/03-Distributed-Systems-and-Reliability/03-timeouts-retries-and-idempotency.md)
+- [Rate limiting and throttling](03-System-Design/03-Distributed-Systems-and-Reliability/04-rate-limiting-and-throttling.md)
+- [Circuit breakers and backpressure](03-System-Design/03-Distributed-Systems-and-Reliability/05-circuit-breakers-and-backpressure.md)
+- [Fault tolerance and disaster recovery](03-System-Design/03-Distributed-Systems-and-Reliability/06-fault-tolerance-and-disaster-recovery.md)
+- [Observability: logs, metrics, and traces](03-System-Design/03-Distributed-Systems-and-Reliability/07-observability-logs-metrics-and-traces.md)
+- [Concurrency, parallelism, and asynchronous work](03-System-Design/03-Distributed-Systems-and-Reliability/09-concurrency-parallelism-and-asynchronous-work.md)
+- [Event-driven architecture](03-System-Design/03-Distributed-Systems-and-Reliability/10-event-driven-architecture.md)
 
 ## How to Use These Notes
 
