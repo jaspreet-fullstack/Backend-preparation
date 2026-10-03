@@ -13,8 +13,6 @@
 Request key -> Partition function -> Shard 1 / Shard 2 / Shard 3
 ```
 
-## Sharding vs. replication
-
 ## Partitioning vs. sharding vs. replication
 
 | Term | What happens to the data | Main reason |
