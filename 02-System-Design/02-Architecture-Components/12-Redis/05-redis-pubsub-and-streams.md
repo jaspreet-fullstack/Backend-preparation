@@ -1,23 +1,110 @@
 # Redis Pub/Sub and Streams
 
-Both features send messages between services, but they keep different delivery history.
+Both Redis Pub/Sub and Redis Streams allow services to **send messages to other services**, but they handle messages differently.
 
-| Feature | How it works | Good fit |
-| --- | --- | --- |
-| **Pub/Sub** | Sends a message to subscribers that are listening now; messages are not kept for offline subscribers to replay. | Live updates where missing an event is acceptable. |
-| **Streams** | Saves ordered entries with IDs; consumer groups can share work and acknowledge entries. | Work or events that may need retry, tracking, or replay. |
+## 1. Redis Pub/Sub
+
+Pub/Sub sends a message to all subscribers that are **currently listening**.
 
 ```text
-Pub/Sub:  Publisher -> channel -> active subscribers
-Streams:  Producer -> retained stream -> consumer group -> acknowledgements
+Publisher
+    ↓
+ Channel
+  ↙   ↘
+Sub A  Sub B
 ```
 
-## Interview tradeoffs
+If a subscriber is offline when the message is published, **it misses the message**.
 
-- With Pub/Sub, a disconnected subscriber misses messages.
-- With Streams, plan how long entries are kept, how failed work is retried, and how the stream is trimmed so it does not grow forever.
-- Redis Streams are useful for many event-processing needs, but do not assume they replace every dedicated message broker.
+Think:
 
-## Interview answer
+> **Pub/Sub = Live message**
 
-Use Pub/Sub for live notifications that do not need replay. Use Streams when messages need to remain available for consumers to process, acknowledge, or replay later.
+### Good for
+
+- Live notifications
+- Real-time updates
+- Chat notifications
+- Events where missing a message is acceptable
+
+---
+
+## 2. Redis Streams
+
+Streams **store messages in Redis** with unique IDs.
+
+Consumers can read the messages later.
+
+```text
+Producer
+    ↓
+Redis Stream
+    ↓
+Consumer Group
+  ↙       ↘
+Worker A  Worker B
+```
+
+Consumers can **acknowledge** messages after processing them.
+
+If processing fails, the message can be handled again.
+
+Think:
+
+> **Streams = Stored message**
+
+### Good for
+
+- Background jobs
+- Event processing
+- Work that needs acknowledgement
+- Retryable processing
+- Cases where messages may need to be read later
+
+---
+
+## 3. Pub/Sub vs Streams
+
+| | Pub/Sub | Streams |
+|---|---|---|
+| Messages stored | ❌ No | ✅ Yes |
+| Offline subscriber | Misses message | Can read later |
+| Replay | ❌ | ✅ |
+| Acknowledgement | ❌ | ✅ |
+| Consumer groups | ❌ | ✅ |
+| Best for | Live notifications | Event/work processing |
+
+### Easy way to remember
+
+> **Pub/Sub → "Listen now."**
+
+> **Streams → "Store and process later."**
+
+---
+
+## 4. Important Considerations
+
+### Pub/Sub
+
+If the subscriber disconnects:
+
+```text
+Publisher → Message → ❌ Offline subscriber
+```
+
+The message is lost for that subscriber.
+
+### Streams
+
+Streams retain messages, so you need to decide:
+
+- How long to keep messages
+- When to remove/trim old messages
+- How to retry failed messages
+- How consumers acknowledge processed messages
+
+---
+
+## Interview Answer
+
+> **Redis Pub/Sub is mainly for real-time messaging where subscribers receive messages only while they are connected, so offline subscribers can miss messages. Redis Streams store messages and support consumer groups and acknowledgements, making them better when messages need to be processed reliably, retried, or read later.**

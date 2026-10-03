@@ -1,26 +1,54 @@
 # Redis Instances, Replication, and Sentinel
 
-An **instance** is one running Redis server.
+A **Redis instance** is one running Redis server.
 
-## Common setups
+## 1. Common Setups
 
-- **Standalone**: one instance. It is simple, but that server can become a limit or a single point of failure.
-- **Primary and replica**: the primary accepts writes and replicas copy its data. Replication is usually asynchronous, so a replica can briefly be behind.
-- **Redis Sentinel**: separate monitor processes check whether the primary is healthy. If it fails, Sentinel can promote a replica and help clients find the new primary.
+### Standalone
+One Redis server.
 
-```text
-Application -> Primary -> Replica
-                  ^          |
-                  |          `-- copies data
-             Sentinel monitors and can promote a replica
-```
+> **Simple, but no failover.**
 
-Sentinel provides monitoring and failover; it does **not** split data across servers. Redis Cluster handles data partitioning.
+### Primary + Replica
+- **Primary** handles writes.
+- **Replica** copies data from the primary.
+- Replication is usually asynchronous, so a replica can briefly be behind.
 
-## Interview tradeoffs
+> **Replica = Copy of primary data**
 
-Replication can improve read capacity and help recover from a server failure, but replicas may lag. Failover can take time, and clients must reconnect to the new primary.
+### Redis Sentinel
+Sentinel monitors the primary and replicas.
 
-## Interview answer
+If the primary fails:
+1. Sentinel detects the failure.
+2. Promotes a replica to primary.
+3. Helps clients discover the new primary.
 
-Use a standalone instance for a simple setup. Add replicas and Sentinel when failover is needed, and use Redis Cluster when the data must be split across multiple primary servers.
+> **Sentinel = Monitoring + automatic failover**
+
+Sentinel **does not split data** across servers.
+
+### Redis Cluster
+Redis Cluster splits data across **multiple primary servers** using hash slots.
+
+> **Cluster = Sharding + failover**
+
+## 2. Easy Comparison
+
+| Setup | Main purpose |
+|---|---|
+| **Standalone** | Simple setup |
+| **Primary + Replica** | Replication / read scaling |
+| **Sentinel** | Automatic failover |
+| **Redis Cluster** | Sharding + failover |
+
+## 3. Tradeoffs
+
+- Replicas can have **replication lag**.
+- Failover takes some time.
+- Clients must reconnect or discover the new primary.
+- More servers mean more operational complexity.
+
+## Interview Answer
+
+> **A standalone Redis instance is the simplest setup. With primary-replica replication, the primary handles writes and replicas copy its data. Sentinel monitors these instances and can promote a replica if the primary fails. If we need to split data across multiple primary servers, we use Redis Cluster.**

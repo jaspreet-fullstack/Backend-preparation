@@ -4,9 +4,13 @@ Redis can keep request counts or bucket state shared across application servers,
 
 ## Common approaches
 
-- **Fixed window**: increment a key for the current time window and expire it at the window end. Keep increment and expiry together in an atomic script so a failure cannot leave a counter with no expiry.
-- **Sliding log**: store request times in a sorted set and count those in the recent window. It is more exact but uses more memory and work.
-- **Token bucket**: store the remaining tokens and last-refill time. An atomic script refills tokens and decides whether to allow the request.
+| Algorithm | How it works | Main tradeoff |
+| --- | --- | --- |
+| **Fixed Window Counter** | Counts requests in set time blocks, then resets the count. | Simple and uses little memory, but users can send a burst at a block boundary. |
+| **Sliding Window Log** | Saves each request time and counts requests in the most recent time period. | Accurate, but saves more data and needs more work. |
+| **Sliding Window Counter** | Estimates the recent request count using parts of the current and previous time blocks. | Uses less memory than the log, but is an estimate. |
+| **Token Bucket** | Tokens refill over time at fixed rate; each request uses one token. | Allows short bursts up to the bucket size while limiting the average rate. |
+| **Leaky Bucket** | Holds requests in a queue and sends them out at a steady rate. | Smooths traffic, but adds waiting time; rejects requests if the queue is full. |
 
 ```text
 Application servers -> Redis atomic check -> allow or reject request

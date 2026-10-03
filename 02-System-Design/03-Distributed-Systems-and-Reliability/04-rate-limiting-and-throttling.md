@@ -9,7 +9,7 @@
 | **Fixed Window Counter** | Counts requests in set time blocks, then resets the count. | Simple and uses little memory, but users can send a burst at a block boundary. |
 | **Sliding Window Log** | Saves each request time and counts requests in the most recent time period. | Accurate, but saves more data and needs more work. |
 | **Sliding Window Counter** | Estimates the recent request count using parts of the current and previous time blocks. | Uses less memory than the log, but is an estimate. |
-| **Token Bucket** | Tokens refill over time; each request uses one token. | Allows short bursts up to the bucket size while limiting the average rate. |
+| **Token Bucket** | Tokens refill over time at fixed rate; each request uses one token. | Allows short bursts up to the bucket size while limiting the average rate. |
 | **Leaky Bucket** | Holds requests in a queue and sends them out at a steady rate. | Smooths traffic, but adds waiting time; rejects requests if the queue is full. |
 
 ```text
