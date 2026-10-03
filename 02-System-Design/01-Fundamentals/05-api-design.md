@@ -22,7 +22,3 @@ Response: { "shortUrl": "https://sho.rt/a1b2" }
 ## Interview reminder
 
 Explain choices that affect the design, such as pagination, safe retries, and whether the client waits for a result or the work happens later.
-
-## Short answer
-
-Design clear APIs around the main user actions. Define the request and response, errors, access checks, pagination, and how retries avoid duplicate work.

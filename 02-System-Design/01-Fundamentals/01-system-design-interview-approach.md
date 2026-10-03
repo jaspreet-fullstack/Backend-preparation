@@ -15,7 +15,3 @@
 - Keep the first design simple; add complexity only to meet a requirement.
 - Explain why each component is needed and what it makes better or harder.
 - Leave time to discuss bottlenecks, failure cases, and possible improvements.
-
-## Short answer
-
-Start by clarifying requirements and scale, then propose a simple high-level design. Deepen the parts that matter most, explaining tradeoffs and failure handling as you go.

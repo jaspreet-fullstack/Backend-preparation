@@ -28,7 +28,3 @@ QPS means queries (or requests) per second. For storage, include how long data i
 - Separate average load from peak load.
 - State assumptions such as active users, requests per user, average response size, and how long data is kept.
 - Use estimates to motivate design choices, not as an end in themselves.
-
-## Short answer
-
-Estimate requests, storage, and traffic using clear assumptions. Convert daily requests to average requests per second, estimate peak load, and use the results to explain the design.

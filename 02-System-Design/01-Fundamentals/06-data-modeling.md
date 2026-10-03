@@ -15,7 +15,3 @@ Design the data model from the system's needs and access patterns (how the syste
 ## Interview prompt
 
 Ask: “What does the system read and write most often, and what must each operation guarantee?” Those answers guide how data is organized and where it is stored.
-
-## Short answer
-
-Model around the important access patterns and correctness requirements. Then choose storage and indexes that support them, while explaining the tradeoffs for writes, reads, consistency, and scale.

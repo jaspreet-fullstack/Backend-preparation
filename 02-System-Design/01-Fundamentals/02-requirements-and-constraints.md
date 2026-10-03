@@ -1,34 +1,39 @@
 # Requirements and Constraints
 
-## Functional requirements
+Before designing a system, first understand **what it needs to do** and **what constraints it must satisfy**.
 
-Describe **what the system does**: its users, core actions, and expected outputs.
+## Functional Requirements
 
-Example: a URL shortener creates a short URL and redirects visitors to the original URL.
+Define **what the system does**.
 
-## Non-functional requirements
+- Users and their actions
+- Core features and workflows
+- Inputs and outputs
 
-Describe **how well the system must work**:
+**Example:** A URL shortener should create a short URL and redirect users to the original URL.
 
-- **Latency**: how long a request takes.
-- **Availability**: how often the system can serve requests.
-- **Scale**: how many users, requests, or records it must handle.
-- **Durability**: whether saved data survives failures.
-- **Consistency**: how up to date reads must be after a write.
-- **Security and cost**: how data is protected and what the system can spend.
+## Non-Functional Requirements
 
-## Questions to clarify
+Define **how well the system should work**.
 
-- Which user flows are in scope? What can be left out?
-- How many users, requests, and stored objects should the design support?
-- What latency and availability targets matter?
-- Must a read show a recent write immediately, or is a short delay acceptable?
-- Are there data retention, privacy, or regional constraints?
+- **Latency** — How quickly the system responds.
+- **Availability** — How reliably the system serves requests.
+- **Scalability** — How much traffic or data the system can handle.
+- **Durability** — Whether data survives failures.
+- **Consistency** — How quickly updates become visible.
+- **Security** — How the system protects data and users.
+- **Cost** — Infrastructure and operational cost.
 
-## Interview reminder
+## Questions to Clarify
 
-Prioritize requirements instead of treating every feature as equally important. Requirements guide the design; do not choose technologies before understanding them.
+- What are the main user flows?
+- What is in scope and out of scope?
+- How many users and requests are expected?
+- How much data will be stored?
+- What latency and availability are required?
+- Is strong or eventual consistency acceptable?
+- Are there security, privacy, retention, or regional requirements?
 
-## Short answer
+## Interview Reminder
 
-Functional requirements define system behavior. Non-functional requirements define qualities and limits, such as scale, latency, availability, and consistency. Clarifying both keeps the design focused.
+Requirements should **drive the architecture**. Clarify the important requirements first instead of choosing technologies immediately.
