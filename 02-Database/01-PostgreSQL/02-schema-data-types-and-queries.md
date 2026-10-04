@@ -1,25 +1,44 @@
 # PostgreSQL Schema, Data Types, and Queries
 
-Design the schema around entities, relationships, integrity rules, and the queries the application actually needs.
+Design the database based on **entities, relationships, constraints, and actual queries**.
 
-## Schema design
+## 1. Schema Design
 
-- Give each table a primary key and use foreign keys for relationships that must be enforced.
-- Normalize repeated facts into related tables to reduce update anomalies; denormalize only for a measured access-pattern need.
-- Use constraints such as `NOT NULL`, `UNIQUE`, `CHECK`, and foreign keys to reject invalid data at the database boundary.
-- Choose types that match meaning: `BIGINT` for large integer identifiers, `NUMERIC` for exact decimal amounts, `TIMESTAMPTZ` for instants in time, and `JSONB` for queryable flexible attributes.
-- Change production schemas with reviewed, repeatable migrations. For large tables, consider whether a migration locks or rewrites data.
+- Give each table a **Primary Key**.
+- Use **Foreign Keys** for relationships.
+- Use constraints like `NOT NULL`, `UNIQUE`, and `CHECK`.
+- Normalize data to reduce unnecessary duplication.
+- Use denormalization only when it improves an important read pattern.
+- Choose suitable data types.
 
-## SQL keys
+Common types:
 
-- **Candidate key:** Any minimal column set that uniquely identifies a row.
-- **Primary key:** The candidate key chosen as the table's main identifier; it must be unique and not null.
-- **Alternate key:** A candidate key not selected as the primary key; enforce it with a `UNIQUE` constraint.
-- **Foreign key:** A column or column set that references a key in another table and enforces the relationship.
-- **Composite key:** A key made from multiple columns, such as `(order_id, line_number)`.
-- **Natural vs. surrogate key:** A natural key has business meaning, such as an externally assigned code; a surrogate key is generated for database identity. Choose stable identifiers and enforce business uniqueness separately when needed.
+| Type | Use |
+|---|---|
+| `BIGINT` | Large integer IDs |
+| `NUMERIC` | Exact money/decimal values |
+| `TEXT` | Text |
+| `BOOLEAN` | True/false |
+| `TIMESTAMPTZ` | Date and time with timezone |
+| `JSONB` | Flexible JSON data |
 
-## Example
+Use **migrations** to safely change the production schema.
+
+## 2. SQL Keys
+
+- **Candidate Key** → Any column(s) that can uniquely identify a row.
+- **Primary Key** → Candidate key chosen as the main identifier.
+- **Alternate Key** → Candidate key not chosen as primary key; usually enforced with `UNIQUE`.
+- **Foreign Key** → References a key in another table.
+- **Composite Key** → Key made from multiple columns.
+- **Natural Key** → Real-world/business value, e.g. email.
+- **Surrogate Key** → Generated ID, e.g. `id`.
+
+> **Primary Key = Main identifier**  
+> **Foreign Key = Relationship**  
+> **Composite Key = Multiple columns**
+
+## 3. Example
 
 ```sql
 CREATE TABLE customers (
@@ -33,41 +52,82 @@ CREATE TABLE orders (
     total NUMERIC(12, 2) NOT NULL CHECK (total >= 0),
     created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+```
 
-SELECT id, total
+## 4. Common SQL
+
+### WHERE
+
+Filters rows.
+
+```sql
+SELECT *
 FROM orders
-WHERE customer_id = 42
+WHERE customer_id = 42;
+```
+
+### GROUP BY
+
+Groups rows for aggregation.
+
+```sql
+SELECT customer_id, COUNT(*) AS order_count
+FROM orders
+GROUP BY customer_id;
+```
+
+### HAVING
+
+Filters groups after `GROUP BY`.
+
+```sql
+SELECT customer_id, SUM(total) AS revenue
+FROM orders
+GROUP BY customer_id
+HAVING SUM(total) > 1000;
+```
+
+### ORDER BY
+
+Sorts the result.
+
+```sql
+SELECT *
+FROM orders
 ORDER BY created_at DESC;
 ```
 
-## Common SQL query building blocks
+> **WHERE → Filter rows**  
+> **GROUP BY → Create groups**  
+> **HAVING → Filter groups**  
+> **ORDER BY → Sort results**
 
-`WHERE` filters input rows before grouping. Aggregate functions such as `COUNT`, `SUM`, `AVG`, `MIN`, and `MAX` compute values over rows. `GROUP BY` forms groups, `HAVING` filters those groups, and `ORDER BY` sorts the final result.
+## 5. JOINs
 
-```sql
-SELECT customer_id, COUNT(*) AS order_count, SUM(total) AS revenue
-FROM orders
-WHERE created_at >= TIMESTAMPTZ '2026-01-01 00:00:00+00'
-GROUP BY customer_id
-HAVING SUM(total) > 100
-ORDER BY revenue DESC;
-```
+JOINs combine data from multiple tables.
 
-### JOINs
-
-Joins combine related rows. `INNER JOIN` returns matching pairs; `LEFT JOIN` keeps every left-side row and fills missing right-side values with `NULL`; `FULL JOIN` keeps unmatched rows from both sides. Choose the join based on whether unmatched rows should remain in the result.
+- **(INNER) JOIN** → Only matching rows.
+- **LEFT (OUTER) JOIN** → All rows from the left table + matching rows from the right.
+- **RIGHT (OUTER) JOIN** → All rows from the right table + matching rows from the left..
+- **FULL (OUTER) JOIN** → All rows from both tables.
 
 ```sql
 SELECT c.id, o.id AS order_id
-FROM customers AS c
-LEFT JOIN orders AS o ON o.customer_id = c.id;
+FROM customers c
+LEFT JOIN orders o
+    ON o.customer_id = c.id;
 ```
 
-### Subqueries and CTEs
+> **INNER = Matching**  
+> **LEFT = Everything from left**  
+> **RIGHT = Everything from right**  
+> **FULL = Everything from both**
 
-A **subquery** is a query nested inside another query. It can be used as a value, a row source, or a membership test with `EXISTS` / `IN`.
+## 6. Subquery and CTE (Common Table Expression)
 
-A **CTE** (common table expression) names a query result for use by the following statement. It can make multi-step queries easier to read; a CTE is not automatically faster than an equivalent subquery.
+**Subquery** → Query inside another query.
+
+**CTE (`WITH`)** → Gives a name to a query result, making complex queries easier to read.
 
 ```sql
 WITH customer_totals AS (
@@ -75,35 +135,64 @@ WITH customer_totals AS (
     FROM orders
     GROUP BY customer_id
 )
-SELECT customer_id, revenue
+SELECT *
 FROM customer_totals
 WHERE revenue > 1000;
 ```
 
-### Window functions
+> **Subquery = Query inside query**  
+> **CTE = Named query result**
 
-Window functions calculate across related rows without collapsing them into one row per group. `PARTITION BY` defines each window, and `ORDER BY` defines its order.
+## 7. Window Functions
+
+Window functions calculate values across related rows **without combining them into one row**.
+
+Example:
 
 ```sql
-SELECT customer_id, id, total,
-       ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY created_at DESC) AS order_rank
+SELECT
+    customer_id,
+    id,
+    total,
+    ROW_NUMBER() OVER (
+        PARTITION BY customer_id
+        ORDER BY created_at DESC
+    ) AS rank
 FROM orders;
 ```
 
-### UNION
+> **GROUP BY → Combines rows**  
+> **Window function → Keeps rows and calculates across them**
 
-`UNION` combines compatible result sets and removes duplicates. `UNION ALL` keeps duplicates and usually avoids the extra de-duplication work. The queries must return the same number of columns with compatible types in corresponding positions.
+## 8. UNION
 
-## Views, functions, and procedures
+Combines results from multiple queries.
 
-- A **view** is a named query; it normally stores the query definition, not a separate result. A materialized view stores results and must be refreshed.
-- A **function** returns a value or set and can be called from SQL expressions or queries.
-- A **procedure** is invoked with `CALL` and is used for procedural workflows; transaction control is available only in supported invocation contexts.
-- **Interview relevance:** Know why these objects exist and when to use them, but prioritize query design, constraints, indexes, and transaction correctness. Keep business logic in the application unless database-side logic provides a clear consistency or operational benefit.
+- `UNION` → Removes duplicates.
+- `UNION ALL` → Keeps duplicates and is usually faster.
 
-## Interview considerations
+```text
+UNION      → Combine + remove duplicates
+UNION ALL  → Combine + keep duplicates
+```
 
-- Model many-to-many relationships with a join table when both sides need independent querying or constraints.
-- Keep monetary values exact; floating-point types can introduce rounding error.
-- Add indexes for important query patterns, but design them with the index and query-plan notes in [PostgreSQL indexes and query plans](03-indexes-and-query-plans.md).
-- Use `JSONB` when fields are genuinely flexible; frequently queried, constrained data often belongs in typed columns.
+## 9. Views, Functions, and Procedures
+
+- **View** → Saved query that behaves like a virtual table.
+- **Materialized View** → Stores the query result and needs refreshing.
+- **Function** → Returns a value/result and can be called from SQL.
+- **Procedure** → Called using `CALL` and is used for procedural operations.
+
+> For interviews, prioritize **queries, joins, indexes, constraints, and transactions** over database-side programming.
+
+## 10. Interview Considerations
+
+- Use a **join table** for many-to-many relationships.
+- Use `NUMERIC` for **money**, not floating-point types.
+- Add indexes based on important query patterns.
+- Use `JSONB` for genuinely flexible data.
+- Frequently queried or constrained data usually belongs in **proper typed columns**.
+
+## Interview Answer
+
+> **When designing a PostgreSQL schema, I first identify entities and relationships, then define primary keys, foreign keys, constraints, and appropriate data types. For queries, I use joins, grouping, CTEs, subqueries, and window functions based on the requirement. I also consider indexes and query patterns to keep important queries efficient.**

@@ -1,33 +1,86 @@
 # PostgreSQL Basics and Architecture
 
-PostgreSQL is an open-source relational database that stores structured data in tables and uses SQL. It is often chosen when relationships, constraints, flexible queries, and reliable transactions are important.
+PostgreSQL is an **open-source RDBMS** that stores data in tables and uses SQL.
 
-## Core concepts
+It is a good choice when the application needs **relationships, constraints, joins, and reliable transactions**.
 
-- A database contains schemas; schemas contain tables, views, indexes, and other objects.
-- Rows represent records and columns have defined data types.
-- Primary keys identify rows; foreign keys enforce relationships between tables.
-- PostgreSQL supports transactions, constraints, joins, and extensions. `JSONB` can store and query semi-structured fields, but does not replace relational modeling by default.
+## 1. Core Concepts
 
-## Request path
+- **Database** → Contains schemas.
+- **Schema** → Contains tables, views, indexes, and other objects.
+- **Table** → Stores data in rows and columns.
+- **Primary Key** → Uniquely identifies a row.
+- **Foreign Key** → Creates a relationship between tables.
+- **JSONB** → Stores and queries JSON data when some fields are semi-structured.
 
-```text
-Application -> connection pool -> PostgreSQL
-                                  |-- parse and plan SQL
-                                  |-- read or update data
-                                  `-- commit transaction and return result
+Example:
+
+```text id="9n0k7e"
+Database
+   ↓
+Schema
+   ↓
+Tables
+   ├── users
+   └── orders
 ```
 
-PostgreSQL commonly uses a server process for each client connection. Creating and maintaining too many connections consumes memory and CPU, so production applications usually connect through a bounded connection pool.
+## DDL vs. DML
 
-An application pool reuses a small set of database connections across requests. A pooler such as PgBouncer can also multiplex many application clients onto fewer PostgreSQL server connections. Set pool sizes with the total number of application instances and database capacity in mind; otherwise, every instance can create its own oversized pool.
+| Category | Full name | Purpose | PostgreSQL examples |
+|---|---|---|---|
+| **DDL** | Data Definition Language | Defines or changes database objects and schema | `CREATE TABLE`, `ALTER TABLE`, `DROP TABLE` |
+| **DML** | Data Manipulation Language | Inserts, changes, or removes table rows | `INSERT`, `UPDATE`, `DELETE` |
 
-## When it fits
+```sql
+-- DDL: define the table structure
+CREATE TABLE products (
+      id BIGINT PRIMARY KEY,
+      name TEXT NOT NULL
+);
 
-- Data has relationships and needs joins or referential integrity.
-- Several changes must succeed or fail together.
-- The application needs flexible SQL queries and constraints.
+-- DML: change table data
+INSERT INTO products (id, name) VALUES (1, 'Keyboard');
+UPDATE products SET name = 'Mechanical keyboard' WHERE id = 1;
+DELETE FROM products WHERE id = 1;
+```
 
-## Interview answer
+`SELECT` reads rows. It is often grouped with DML in general explanations, but is also commonly called **DQL (Data Query Language)**.
 
-Choose PostgreSQL when relational queries and transaction correctness matter. Discuss schema and indexes, connection limits, read/write load, backups, and how the database will scale as usage grows.
+## 2. Request Flow
+
+```text id="b2y8kp"
+Application
+     ↓
+Connection Pool
+     ↓
+PostgreSQL
+     ↓
+Parse → Plan → Execute
+     ↓
+Result
+```
+
+### Connection Pool
+
+Creating too many PostgreSQL connections uses **memory and CPU**.
+
+A connection pool keeps a limited number of connections and **reuses them** across requests.
+
+> **Connection Pool = Reuse a limited number of DB connections**
+
+A pooler such as **PgBouncer** can also manage and reuse PostgreSQL connections.
+
+## 3. When to Use PostgreSQL
+
+PostgreSQL is a good fit when:
+
+- Data has **relationships**.
+- You need **joins**.
+- You need strong **constraints**.
+- Multiple operations need to succeed or fail together using **transactions**.
+- You need flexible SQL queries.
+
+## Interview Answer
+
+> **PostgreSQL is an open-source relational database that stores structured data in tables. I would choose it when the application needs relationships, joins, constraints, and reliable transactions. In production, I would also consider indexes, connection pooling, backups, and how the database will scale with increasing traffic.**

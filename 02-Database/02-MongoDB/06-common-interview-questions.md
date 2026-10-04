@@ -2,48 +2,137 @@
 
 ### 1. What is MongoDB, and what does BSON mean?
 
-MongoDB is a document database that stores documents in collections. BSON is its binary-encoded document representation, with types such as dates and binary data in addition to JSON-like values.
+**MongoDB** is a NoSQL document database that stores data as documents inside collections.
+
+**BSON** = Binary JSON. It is MongoDB's binary format for storing documents and supports additional types like dates and binary data.
+
+---
 
 ### 2. When should you embed documents vs. use references?
 
-Embed bounded data that is commonly read and updated with its parent. Reference large, unbounded, shared, or independently changing data. Decide from access patterns and consistency needs.
+**Embed** when data is small, bounded, and usually accessed with the parent.
+
+**Reference** when data is large, unbounded, shared, or independently updated.
+
+---
 
 ### 3. Are MongoDB writes atomic?
 
-A single-document write is atomic. Multi-document transactions are supported on replica sets and sharded clusters, but can add coordination and latency.
+Yes. A **single-document write is atomic**.
+
+MongoDB also supports **multi-document transactions** when multiple documents need to be changed atomically.
+
+---
 
 ### 4. How do compound indexes work?
 
-A compound index covers fields in a defined order. Queries can generally use its leading-field prefixes, so order it around important filters and sorts; validate with `explain("executionStats")`.
+A **compound index** indexes multiple fields in a specific order.
 
-### 5. What is a replica set?
+```js
+db.orders.createIndex({
+  customerId: 1,
+  createdAt: -1
+});
+```
 
-A group of MongoDB members that maintain copies of data. A primary accepts writes, secondaries replicate its oplog, and eligible members can elect a new primary after failure.
+Field order matters, and queries can generally use the index starting from its leading fields.
 
-### 6. What are read concern and write concern?
+---
 
-Read concern controls the consistency/isolation guarantees of returned data. Write concern controls the acknowledgement required for a write, affecting durability, latency, and availability tradeoffs.
+### 5. What is a Replica Set?
 
-### 7. What is a shard key?
+A **Replica Set** is a group of MongoDB servers that maintain copies of the same data.
 
-A shard key determines how documents are distributed across shards and how queries are routed. Choose one with good distribution and high relevance to common query patterns; a poor key can cause hot shards or scatter-gather reads.
+```text
+       Primary
+       /     \
+ Secondary  Secondary
+```
 
-### 8. When would you use a multi-document transaction?
+- Primary → handles writes
+- Secondary → replicates data
+- Primary failure → election → new primary
 
-Use one when a correctness invariant truly spans multiple documents and cannot be modeled as one atomic document operation. Keep it short and handle transient retries.
+---
 
-### 9. What is an aggregation pipeline?
+### 6. What are Read Concern and Write Concern?
 
-An ordered sequence of stages that filters, groups, reshapes, joins, and sorts documents. Use stages such as `$match` and `$group`, and inspect plans and workload cost.
+**Read Concern** controls the consistency level of reads.
 
-### 10. What is the maximum BSON document size, and why does it matter?
+**Write Concern** controls how much acknowledgment is required for a write.
 
-A BSON document is limited to 16 MiB. Avoid unbounded embedded arrays; store growing child data in a separate collection when appropriate.
+---
 
-### 11. How is sharding different from replication?
+### 7. What is a Shard Key?
 
-Sharding distributes different data across shards for capacity; replication keeps copies of the same data for availability and failover. A sharded deployment can replicate each shard.
+A **shard key** determines how documents are distributed across shards and helps MongoDB route queries.
+
+A poor shard key can cause **hot shards** or **scatter-gather queries**.
+
+---
+
+### 8. When would you use a Multi-Document Transaction?
+
+Use a transaction when multiple documents must be updated **atomically**.
+
+Example:
+
+```text
+Account A → -₹100
+Account B → +₹100
+```
+
+Both operations should succeed or both should fail.
+
+---
+
+### 9. What is an Aggregation Pipeline?
+
+An **aggregation pipeline** processes documents through multiple stages.
+
+Common stages:
+
+```text
+$match → $group → $sort → $limit
+```
+
+- `$match` → filter
+- `$group` → group/calculate
+- `$sort` → sort
+- `$lookup` → join collections
+
+---
+
+### 10. What is the Maximum BSON Document Size?
+
+A MongoDB BSON document can be at most **16 MiB**.
+
+This is important when embedding data because unbounded arrays can make a document too large.
+
+---
+
+### 11. How is Sharding different from Replication?
+
+**Replication** keeps copies of the same data for **high availability**.
+
+**Sharding** distributes different data across multiple servers for **scaling**.
+
+```text
+Replication → Same data → Multiple servers
+
+Sharding → Different data → Different servers
+```
+
+---
 
 ### 12. How do you decide between MongoDB and PostgreSQL?
 
-Compare data relationships, query patterns, transaction and integrity requirements, expected scale, and team operations. Choose the model that best fits the workload rather than assuming either is universally faster.
+Consider:
+
+- Data relationships
+- Query patterns
+- Transaction requirements
+- Data structure
+- Scalability requirements
+
+Choose the database based on the **workload and data model**, not simply because one is SQL or NoSQL.
