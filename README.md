@@ -127,6 +127,31 @@ This repository is a set of study notes and practice exercises for JavaScript, b
 - [Concurrency, parallelism, and asynchronous work](03-System-Design/03-Distributed-Systems-and-Reliability/09-concurrency-parallelism-and-asynchronous-work.md)
 - [Event-driven architecture](03-System-Design/03-Distributed-Systems-and-Reliability/10-event-driven-architecture.md)
 
+### DevOps and Delivery
+
+#### Git and GitHub
+
+- [Git fundamentals](04-DevOps-and-Delivery/01-Git-and-GitHub/01-git-fundamentals.md)
+- [Branching, merging, and conflicts](04-DevOps-and-Delivery/01-Git-and-GitHub/02-branching-merging-and-conflicts.md)
+- [Pull requests and collaboration](04-DevOps-and-Delivery/01-Git-and-GitHub/03-github-pull-requests-and-collaboration.md)
+- [Common interview questions](04-DevOps-and-Delivery/01-Git-and-GitHub/04-common-interview-questions.md)
+
+#### Docker
+
+- [Containers, images, and VMs](04-DevOps-and-Delivery/02-Docker/01-containers-images-and-vms.md)
+- [Dockerfiles, builds, and layers](04-DevOps-and-Delivery/02-Docker/02-dockerfiles-builds-and-layers.md)
+- [Volumes, networking, and Compose](04-DevOps-and-Delivery/02-Docker/03-volumes-networking-and-compose.md)
+- [Production security and optimization](04-DevOps-and-Delivery/02-Docker/04-production-security-and-optimization.md)
+- [Common interview questions](04-DevOps-and-Delivery/02-Docker/05-common-interview-questions.md)
+
+#### CI/CD
+
+- [CI/CD fundamentals](04-DevOps-and-Delivery/03-CI-CD/01-ci-cd-fundamentals.md)
+- [GitHub Actions](04-DevOps-and-Delivery/03-CI-CD/02-github-actions.md)
+- [Jenkins](04-DevOps-and-Delivery/03-CI-CD/03-jenkins.md)
+- [Pipeline design, secrets, and deployments](04-DevOps-and-Delivery/03-CI-CD/04-pipeline-design-secrets-and-deployments.md)
+- [Common interview questions](04-DevOps-and-Delivery/03-CI-CD/05-common-interview-questions.md)
+
 ## How to Use These Notes
 
 The numbered files provide a suggested order within each topic area. System Design notes are short interview refreshers: they focus on key ideas, tradeoffs, examples, and concise answers. JavaScript practice files contain small exercises that can be run with Node.js.
