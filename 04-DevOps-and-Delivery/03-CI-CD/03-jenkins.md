@@ -1,30 +1,108 @@
 # Jenkins
 
-Jenkins is an automation server commonly used to run CI/CD pipelines. Teams host and operate a Jenkins controller and assign work to build agents.
+Jenkins is an **automation server used for CI/CD**.
 
-## Architecture
+It can automatically:
 
-```text
-Git push / webhook
-        |
-        v
-Jenkins controller -- schedules --> Build agent
-        |                               |
-        |                         checkout, test, build
-        |                               |
-        `---- status / logs <----- artifact -> registry
+```text id="z5e8d3"
+Code → Build → Test → Deploy
 ```
 
-- **Controller:** Stores job configuration, coordinates scheduling, and presents UI/API. Avoid running untrusted heavy builds on the controller.
-- **Agent:** Executes jobs in an environment with the needed tools; use isolated, preferably ephemeral agents for safer reproducible builds.
-- **Jenkinsfile:** Pipeline-as-code stored with the application, usually written with Declarative or Scripted Pipeline syntax.
-- **Plugins:** Extend integrations but add compatibility, maintenance, and supply-chain risk; keep the plugin set small and patched.
+Jenkins is commonly used to automate software build, testing, and deployment processes.
 
-## Pipeline as code
+---
 
-```groovy
+# 1. Jenkins Architecture
+
+```text id="f3m3kq"
+Developer
+    ↓
+Git Push / Pull Request
+    ↓
+Jenkins Controller
+    ↓
+Jenkins Agent
+    ↓
+Build → Test → Deploy
+```
+
+### Controller
+
+The **controller** manages Jenkins.
+
+Responsibilities:
+
+- Manage jobs/pipelines
+- Schedule builds
+- Assign jobs to agents
+- Store Jenkins configuration
+- Provide Jenkins UI
+
+The controller usually **should not run heavy builds**.
+
+---
+
+### Agent
+
+An **agent** is the machine that actually executes the pipeline.
+
+For example:
+
+```text id="0fqm4s"
+Controller
+    ↓
+Agent
+    ↓
+npm install
+npm test
+docker build
+```
+
+Agents can have different environments/tools depending on the project.
+
+---
+
+### Jenkinsfile
+
+A `Jenkinsfile` defines the CI/CD pipeline as code.
+
+It is usually stored inside the Git repository:
+
+```text id="w0i6q3"
+my-project/
+├── src/
+├── package.json
+└── Jenkinsfile
+```
+
+---
+
+### Plugins
+
+Jenkins uses plugins to add functionality.
+
+Examples:
+
+- Git
+- Docker
+- Kubernetes
+- Slack
+- AWS
+
+Plugins allow Jenkins to integrate with different tools.
+
+---
+
+# 2. Jenkins Pipeline
+
+A pipeline defines the steps Jenkins should execute.
+
+Example:
+
+```groovy id="z5j7gt"
 pipeline {
     agent any
+
     stages {
         stage('Test') {
             steps {
@@ -32,24 +110,81 @@ pipeline {
                 sh 'npm test'
             }
         }
+
         stage('Build') {
             steps {
-                sh 'docker build -t example/app:${BUILD_NUMBER} .'
+                sh 'docker build -t my-app .'
             }
         }
     }
 }
 ```
 
-This is an illustrative pipeline: production should publish an immutable artifact, use managed credentials, and deploy through controlled environments rather than relying only on a build number tag.
+Flow:
 
-## Operations and security
+```text id="w2w0m6"
+Git Push
+   ↓
+Jenkins
+   ↓
+Test
+   ↓
+Build
+   ↓
+Deploy
+```
 
-- Restrict controller and agent access; use a credentials store and narrow credential scope.
-- Keep Jenkins and plugins patched, back up controller configuration, and test restore procedures.
-- Separate jobs/agents by trust level; a job that executes repository code can run arbitrary commands on its agent.
-- Prefer external artifact registries and log storage with retention policies.
+---
 
-## Interview answer
+# 3. Common Jenkins Pipeline Stages
 
-Describe controller/agent responsibilities, a version-controlled Jenkinsfile, isolated workers, credential handling, artifact publication, and the operational work of maintaining Jenkins and its plugins.
+A typical backend pipeline might be:
+
+```text id="p1ukj6"
+Checkout Code
+     ↓
+Install Dependencies
+     ↓
+Lint
+     ↓
+Run Tests
+     ↓
+Build Application
+     ↓
+Build Docker Image
+     ↓
+Push Image to Registry
+     ↓
+Deploy
+```
+
+---
+
+# 4. Jenkins Security
+
+Important practices:
+
+- **Protect Jenkins access** → Don't expose Jenkins publicly without proper security.
+- **Use credentials securely** → Don't put passwords/API keys directly in Jenkinsfile.
+- **Use least privilege** → Give jobs only the permissions they need.
+- **Keep Jenkins and plugins updated** → Reduces security vulnerabilities.
+- **Isolate agents** → Don't allow untrusted jobs to access sensitive systems.
+- **Backup Jenkins configuration** → Helps recover Jenkins after failure.
+
+---
+
+# 5. Jenkins vs GitHub Actions
+
+| Jenkins | GitHub Actions |
+|---|---|
+| Separate automation server | Built into GitHub |
+| Usually self-hosted | GitHub-hosted runners available |
+| Highly customizable | Easy GitHub integration |
+| Uses Jenkinsfile | Uses YAML workflows |
+| Requires Jenkins maintenance | Less infrastructure to manage |
+
+---
+
+## Interview Answer
+
+> **Jenkins is an automation server commonly used for CI/CD. It has a controller that manages and schedules jobs and agents that execute those jobs. We define pipelines using a Jenkinsfile stored in the Git repository. A typical pipeline checks out code, installs dependencies, runs tests, builds the application or Docker image, pushes the image to a registry, and deploys it.**

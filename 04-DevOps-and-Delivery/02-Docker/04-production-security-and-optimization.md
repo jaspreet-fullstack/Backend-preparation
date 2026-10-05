@@ -1,28 +1,47 @@
 # Docker Production Security and Optimization
 
-## Security
+## 1. Security
 
-- Run as a non-root user and grant only the Linux capabilities the process needs.
-- Use minimal, maintained base images; pin versions or digests according to the update policy.
-- Scan images and dependencies, rebuild for security updates, and track image provenance where required.
-- Keep secrets out of source, build context, image layers, and logs. Inject secrets at runtime through a managed secret store.
-- Do not mount the Docker socket into an application container; it grants powerful host control.
-- Apply CPU and memory limits, read-only filesystems where possible, and network restrictions appropriate to the service.
+- **Run as non-root user** → Reduces the impact if the container is compromised.
+- **Use minimal, updated images** → Smaller attack surface and fewer vulnerabilities.
+- **Scan images and dependencies** → Find security vulnerabilities before deployment.
+- **Keep secrets outside the image** → Never put passwords, API keys, or tokens in code or Dockerfiles. Use environment variables or a secret manager.
+- **Don't mount Docker socket** → `/var/run/docker.sock` gives powerful control over the Docker host.
+- **Set resource limits** → Limit CPU and memory to prevent one container from consuming all host resources.
+- **Use read-only filesystem when possible** → Prevent unnecessary writes inside the container.
 
-## Runtime behavior
+---
 
-- A container should run one primary service process and handle `SIGTERM` gracefully so deployments can drain requests.
-- Expose a health endpoint or health check that reflects whether the service can do useful work; distinguish liveness from readiness when the platform supports both.
-- Send logs to stdout/stderr so the runtime can collect them; avoid writing important logs only into the container filesystem.
-- Keep configuration external to the image so one image can move between environments.
+## 2. Runtime Best Practices
 
-## Image efficiency
+- **One primary service per container** → For example, one container for API and another for PostgreSQL.
+- **Handle `SIGTERM` gracefully** → Allows the application to finish current requests before shutting down.
+- **Use health checks** → Helps determine whether the application is healthy and ready to receive traffic.
+- **Send logs to stdout/stderr** → Docker and the deployment platform can collect them easily.
+- **Keep configuration outside the image** → The same image can be used in development, staging, and production with different configurations.
 
-- Use multi-stage builds to keep compilers and development dependencies out of runtime images.
-- Use `.dockerignore` and order stable dependency steps before frequently changing source files to improve cache reuse.
-- Measure image size and startup time; smaller is not automatically better if it harms security or reliability.
-- Promote the same tested image digest from staging to production rather than rebuilding different bytes from the same tag.
+---
 
-## Interview answer
+## 3. Image Optimization
 
-Discuss non-root execution, secret handling, minimal patched images, resource limits, signal handling, health checks, and immutable artifact promotion. Explain the risk each control reduces.
+- **Use multi-stage builds** → Keep build tools and development dependencies out of the final image.
+- **Use `.dockerignore`** → Don't copy unnecessary files like `node_modules`, `.git`, and logs.
+- **Use Docker layer caching** → Copy dependency files before source code so dependencies don't reinstall when only source code changes.
+
+Example:
+
+```dockerfile
+COPY package*.json ./
+RUN npm ci
+
+COPY . .
+```
+
+- **Use specific image versions** → Avoid relying on `latest` in production.
+- **Promote the same tested image** → Build and test an image once, then use that same image in production instead of rebuilding it.
+
+---
+
+## Interview Answer
+
+> **For Docker production security, I would run containers as non-root users, use minimal and updated images, scan images for vulnerabilities, and keep secrets outside the image. I would also apply CPU and memory limits, use health checks, handle SIGTERM for graceful shutdown, and use multi-stage builds and `.dockerignore` to optimize images.**

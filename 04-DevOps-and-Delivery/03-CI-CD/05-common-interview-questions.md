@@ -2,40 +2,113 @@
 
 ### 1. What is CI?
 
-Continuous integration frequently merges small changes and automatically builds and tests them so integration problems are found early.
+CI stands for **Continuous Integration**. Developers frequently push small changes, and the system automatically builds and tests them to find problems early.
 
-### 2. What is the difference between continuous delivery and continuous deployment?
+---
 
-Continuous delivery keeps changes ready for release, often with a human approval. Continuous deployment automatically releases changes that pass the required gates.
+### 2. What is the difference between Continuous Delivery and Continuous Deployment?
+
+**Continuous Delivery** keeps the application ready for production, but deployment may require manual approval.
+
+**Continuous Deployment** automatically deploys changes to production after all checks pass.
+
+---
 
 ### 3. What is an artifact, and why build once?
 
-An artifact is a versioned output such as a package or container image. Building once and promoting the same immutable artifact avoids environment-specific rebuild differences.
+An **artifact** is the output of a build, such as a Docker image or compiled application.
+
+We build it **once** and use the same artifact in staging and production so the tested version is exactly what gets deployed.
+
+---
 
 ### 4. What is the difference between a cache and an artifact?
 
-A cache speeds up future work and can be evicted or recomputed. An artifact is a build output that should be identified, retained, and promoted reliably.
+A **cache** stores reusable data to make future builds faster.
+
+An **artifact** is the actual build output that we deploy or keep.
+
+```text id="xyp7h5"
+Cache    → Speed up builds
+Artifact → Deployable output
+```
+
+---
 
 ### 5. How do you protect secrets in a pipeline?
 
-Use a secret manager or CI secret store, restrict credentials to the smallest scope, avoid printing them, and prefer short-lived identity federation over long-lived keys where possible.
+Store secrets in a **secret manager or CI/CD secret store**.
+
+Don't put them in source code, Docker images, or logs.
+
+Give credentials only the permissions they need.
+
+---
 
 ### 6. How would you roll out a high-risk change?
 
-Deploy progressively, such as canary or blue/green, monitor health and business indicators, and pause or roll back if thresholds fail. Ensure rollback accounts for data and schema changes.
+Use a gradual deployment strategy such as **canary or blue-green**.
+
+Monitor error rate, latency, and application health. If something goes wrong, pause the deployment or roll back.
+
+---
 
 ### 7. What is GitHub Actions?
 
-A GitHub automation service that runs YAML workflows in response to events using jobs, steps, and hosted or self-hosted runners.
+GitHub Actions is a **CI/CD automation tool built into GitHub**.
+
+It uses YAML workflows that run jobs and steps on GitHub-hosted or self-hosted runners.
+
+---
 
 ### 8. What are Jenkins controllers and agents?
 
-The controller schedules and coordinates jobs; agents execute build steps. Isolate agents because pipeline jobs execute code and may be untrusted.
+The **Jenkins controller** manages and schedules jobs.
+
+The **Jenkins agent** actually executes the build, test, or deployment steps.
+
+```text id="wj3qye"
+Controller
+    ↓
+Agent
+    ↓
+Build / Test / Deploy
+```
+
+---
 
 ### 9. How should database migrations fit into CI/CD?
 
-Test migrations, make changes backward-compatible where possible, separate schema and application rollout when needed, and plan for rollback or forward repair of data changes.
+Test migrations before production and make them **backward-compatible** when possible.
+
+For example:
+
+```text id="s6v3c7"
+Add new column
+      ↓
+Deploy new code
+      ↓
+Migrate data
+      ↓
+Remove old column later
+```
+
+Remember that rolling back application code does **not automatically roll back database changes**.
+
+---
 
 ### 10. What should happen when a pipeline stage fails?
 
-Stop promotion, report actionable logs, preserve useful test/build artifacts, avoid exposing secrets, and leave the last known-good deployment serving traffic.
+The pipeline should **stop the deployment**, show useful logs, and prevent the failed version from reaching production.
+
+The last known-good version should continue serving traffic.
+
+```text id="w3k7c2"
+Pipeline fails
+     ↓
+Stop
+     ↓
+Fix problem
+     ↓
+Last good version remains
+```

@@ -1,31 +1,115 @@
 # GitHub Pull Requests and Collaboration
 
-Git is the version-control system; GitHub is a hosting and collaboration platform built around Git repositories.
+**Git** is the version-control system.  
+**GitHub** is a platform that hosts Git repositories and provides collaboration features.
 
-## Typical pull-request flow
+## 1. Pull Request (PR)
+
+A Pull Request is a request to **merge changes from one branch into another branch** after review.
+
+### Typical Flow
 
 ```text
-Create branch -> Commit changes -> Push branch -> Open pull request
-      -> Review + automated checks -> Approve -> Merge -> Delete branch
+Create Branch
+     ↓
+Make Changes
+     ↓
+Commit
+     ↓
+Push Branch
+     ↓
+Open Pull Request
+     ↓
+Code Review + Tests
+     ↓
+Approve
+     ↓
+Merge
 ```
 
-A pull request (PR) proposes changes for review before they are merged. Reviewers discuss correctness, design, tests, security, and maintainability. Status checks can require tests, linting, and other automation to pass before merge.
+Reviewers check:
 
-## Collaboration controls
+- Code quality
+- Correctness
+- Tests
+- Security
+- Maintainability
 
-- Use protected branches to require reviews and passing checks for important branches.
-- Keep PRs focused and small enough to review; describe behavior changes and testing clearly.
-- Use CODEOWNERS or team rules to route reviews to maintainers.
-- Resolve review feedback and keep the branch current according to the team's merge/rebase policy.
-- Store credentials in a secret manager or GitHub Actions secrets, never in commits or PR comments.
+---
 
-## GitHub platform concepts
+## 2. Branch Protection
 
-- **Repository:** Hosted Git history plus issues, PRs, settings, and automation.
-- **Fork:** A separate copy under another account or organization, often used for external contributions.
-- **Issue:** Tracks a bug, feature, or task; a PR can link to an issue.
-- **Release/tag:** A named point in history used to identify a version; tags are not a substitute for verified build artifacts.
+**Branch protection** prevents unwanted changes to important branches such as `main`.
 
-## Interview answer
+Common rules:
 
-Git records source history; GitHub adds remote hosting, review workflows, access controls, issues, and automation. Explain how branch protections and required checks prevent unreviewed or failing changes from reaching the main branch.
+- Require Pull Request
+- Require code review
+- Require tests/checks to pass
+- Prevent direct pushes
+
+---
+
+## 3. Useful GitHub Concepts
+
+### Repository
+
+A Git repository hosted on GitHub, along with features like PRs, Issues, and Actions.
+
+### Fork
+
+A separate copy of a repository under another account.
+
+Commonly used when contributing to open-source projects.
+
+### Issue
+
+Used to track:
+
+- Bugs
+- Features
+- Tasks
+
+A Pull Request can be linked to an Issue.
+
+### Release / Tag
+
+A **tag** points to a specific commit, usually to mark a version.
+
+Example:
+
+```text
+v1.0.0
+v2.0.0
+```
+
+---
+
+## 4. CODEOWNERS
+
+`CODEOWNERS` defines who should review changes to specific files or directories.
+
+Example:
+
+```text
+/backend/ @backend-team
+/frontend/ @frontend-team
+```
+
+---
+
+## 5. Secrets
+
+Never commit passwords, API keys, or tokens to Git.
+
+Use:
+
+- GitHub Actions Secrets
+- Environment variables
+- Secret managers
+
+---
+
+## Interview Answer
+
+> **Git is used for version control, while GitHub provides repository hosting and collaboration features. A typical workflow is to create a branch, commit and push changes, open a Pull Request, run reviews and automated checks, and then merge it into the main branch. Branch protection can require reviews and passing checks before merging.**

@@ -1,21 +1,23 @@
 # Git Fundamentals
 
-Git is a distributed version-control system. Each developer has a local repository containing project history and can exchange commits with remote repositories such as GitHub.
+Git is a **distributed version-control system** used to track code changes and collaborate with other developers.
 
-## Core model
+Each developer has a **local repository** containing the project's Git history.
+
+## Core Model
 
 ```text
-Working tree -> Staging area (index) -> Local repository -> Remote repository
-    edit          git add                 git commit         git push
+Working Tree → Staging Area → Local Repository → Remote Repository
+    edit          git add          git commit          git push
 ```
 
-- **Working tree:** Current checked-out files.
-- **Staging area:** The exact changes selected for the next commit.
-- **Commit:** A snapshot with a parent commit, author, message, and content changes.
-- **Branch:** A movable name pointing to a commit; `HEAD` identifies the current checkout.
-- **Remote:** A named reference to another repository, commonly `origin`.
+- **Working Tree** → Your current files and changes.
+- **Staging Area** → Changes selected for the next commit.
+- **Commit** → A saved snapshot of changes.
+- **Branch** → A pointer to a commit that allows independent development.
+- **Remote** → Another Git repository, such as GitHub. Common name: `origin`.
 
-## Daily workflow
+## Daily Workflow
 
 ```bash
 git status
@@ -26,15 +28,94 @@ git fetch origin
 git push -u origin feature-branch
 ```
 
-`git fetch` downloads remote references without integrating them. `git pull` fetches and then integrates changes, usually by merge or rebase depending on configuration.
+### `git fetch` vs `git pull`
 
-## Useful distinctions
+- `git fetch` → Downloads changes from remote but does **not** integrate them.
+- `git pull` → Fetches changes and then integrates them, usually using merge or rebase.
 
-- `git diff` shows unstaged changes; `git diff --staged` shows staged changes.
-- A commit records a local snapshot; pushing publishes commits to a remote.
-- `.gitignore` prevents untracked matching files from being added by accident, but does not untrack a file already committed.
-- Git history is local until pushed. A remote is not a backup unless its retention and access controls meet backup needs.
+## Stashing Changes
 
-## Interview answer
+`git stash` temporarily saves your **uncommitted changes** so you can switch branches or work on something else.
 
-Describe Git as a content-addressed history of snapshots. Explain how working changes move through staging and commits, and how branches and remotes let teams collaborate without sharing one mutable working directory.
+```bash
+git stash
+git stash list
+git stash pop
+git stash apply
+```
+
+- `git stash` → Save uncommitted changes.
+- `git stash pop` → Apply changes and remove them from stash.
+- `git stash apply` → Apply changes but keep them in stash.
+- `git stash list` → Show saved stashes.
+
+Example:
+
+```text
+Working on feature A
+       ↓
+Uncommitted changes
+       ↓
+git stash
+       ↓
+Clean working tree
+       ↓
+Switch branch / do other work
+       ↓
+git stash pop
+       ↓
+Changes restored
+```
+
+## `.gitignore`
+
+`.gitignore` specifies files and folders that Git should **not track**.
+
+Example:
+
+```gitignore
+node_modules/
+.env
+dist/
+*.log
+```
+
+Important:
+
+> `.gitignore` prevents untracked files from being added, but it does **not** stop tracking a file that was already committed.
+
+To stop tracking an already tracked file but **keep it locally**:
+
+```bash
+git rm --cached .env
+```
+
+For a folder:
+
+```bash
+git rm -r --cached dist/
+```
+
+Then add it to `.gitignore` and commit the change.
+
+```text
+Already tracked
+      ↓
+git rm --cached
+      ↓
+No longer tracked by Git
+      ↓
+File still exists locally
+```
+
+## Important Differences
+
+- `git diff` → Shows unstaged changes.
+- `git diff --staged` → Shows staged changes.
+- `git commit` → Saves changes to the local repository.
+- `git push` → Sends local commits to the remote repository.
+- Git history is **local until pushed**.
+
+## Interview Answer
+
+> **Git is a distributed version-control system used to track code changes and collaborate. Changes move from the working tree to the staging area using `git add`, then to the local repository using `git commit`, and finally to a remote repository using `git push`.**
