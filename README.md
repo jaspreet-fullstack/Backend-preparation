@@ -27,19 +27,19 @@ This repository is a set of study notes and practice exercises for JavaScript, b
 
 ### Backend Fundamentals
 
-- [Web and networking](01-Backend/Backend-Fundamentals/01-web-and-networking.md)
-- [Backend architecture](01-Backend/Backend-Fundamentals/02-Backend-architecture.md)
-- [Operating system and runtime basics](01-Backend/Backend-Fundamentals/03-os-&-runtym-basiis.md)
-- [Backend production](01-Backend/Backend-Fundamentals/04-backend-production.md)
-- [HTTP protocol](01-Backend/Backend-Fundamentals/05-http-protocol.md)
+- [Web and networking](01-Backend/01-Fundamentals/01-web-and-networking.md)
+- [Backend architecture](01-Backend/01-Fundamentals/02-Backend-architecture.md)
+- [Operating system and runtime basics](01-Backend/01-Fundamentals/03-os-&-runtym-basiis.md)
+- [Backend production](01-Backend/01-Fundamentals/04-backend-production.md)
+- [HTTP protocol](01-Backend/01-Fundamentals/05-http-protocol.md)
 
 ### Node.js
 
-- [Event loop](01-Backend/Node.js/01-event-loop.md)
-- [Asynchronous concepts](01-Backend/Node.js/02-Async-concept.md)
-- [Runtime internals](01-Backend/Node.js/03-runtime-internals.md)
-- [Memory and processes](01-Backend/Node.js/04-memory-processes.md)
-- [Streams and buffers](01-Backend/Node.js/05-Streams-&-buffer.md)
+- [Event loop](01-Backend/03-Node.js/01-event-loop.md)
+- [Asynchronous concepts](01-Backend/03-Node.js/02-Async-concept.md)
+- [Runtime internals](01-Backend/03-Node.js/03-runtime-internals.md)
+- [Memory and processes](01-Backend/03-Node.js/04-memory-processes.md)
+- [Streams and buffers](01-Backend/03-Node.js/05-Streams-&-buffer.md)
 
 ### Database Engines
 
