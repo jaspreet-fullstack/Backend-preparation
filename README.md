@@ -152,6 +152,15 @@ This repository is a set of study notes and practice exercises for JavaScript, b
 - [Pipeline design, secrets, and deployments](04-DevOps-and-Delivery/03-CI-CD/04-pipeline-design-secrets-and-deployments.md)
 - [Common interview questions](04-DevOps-and-Delivery/03-CI-CD/05-common-interview-questions.md)
 
+### DSA Patterns
+
+- [Pattern roadmap](05-DSA%20Pattern/00-Pattern-Roadmap.md)
+- [Arrays, hashing, and searching](05-DSA%20Pattern/01-Arrays-Hashing-Searching.md)
+- [Strings, linked lists, stacks, and queues](05-DSA%20Pattern/02-Strings-LinkedLists-Stacks-Queues.md)
+- [Heaps, trees, and graphs](05-DSA%20Pattern/03-Heaps-Trees-Graphs.md)
+- [Greedy, backtracking, and DP](05-DSA%20Pattern/04-Greedy-Backtracking-DP.md)
+- [Advanced DSA patterns](05-DSA%20Pattern/05-Advanced-DSA-Patterns.md)
+
 ## How to Use These Notes
 
 The numbered files provide a suggested order within each topic area. System Design notes are short interview refreshers: they focus on key ideas, tradeoffs, examples, and concise answers. JavaScript practice files contain small exercises that can be run with Node.js.
